@@ -21,35 +21,37 @@
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     let data = [];
+    let datadict = {};
     let min = 100, max = -100;
-    let tempData = [0];
+    let generateTS = () => {
+        let tempData = Array(50001);
+        tempData[0] = 0;
+        for (let i = 1; i <= 50000; i++) {
+            let diff = Math.random() - 0.5;
+            tempData[i] = tempData[i - 1] + diff;
+
+            if (tempData[i] > max) {
+                max = tempData[i]
+            } else if (tempData[i] < min) {
+                min = tempData[i]
+            }
+        }
+        return tempData;
+    };
+
+    let data1 = generateTS();
+    data = generateTS();
+
+    // data = []
     // for (let j = 0; j < 2; j++) {
-    //     for (let i = 1; i <= 50000; i++) {
-    //         let diff = Math.random() - 0.5;
-    //         tempData[i] = tempData[i - 1] + diff;
-    //
-    //         if (tempData[i] > max) {
-    //             max = tempData[i]
-    //         }
-    //         else if (tempData[i] < min) {
-    //             min = tempData[i]
-    //         }
-    //     }
-    //     data.push(tempData)
+    //     console.log("before", data)
+    //     data.push(generateTS())
+    //     console.log("after", data)
     // }
 
-    data.push(0)
-    for (let i = 1; i <= 50000; i++) {
-        let diff = Math.random() - 0.5;
-        data[i] = data[i - 1] + diff;
-
-        if (data[i] > max) {
-            max = data[i]
-        }
-        else if (data[i] < min) {
-            min = data[i]
-        }
-    }
+    console.log("abcdefg", data1.map((d, i) => {return d - data[0][i]}))
+    console.log(data[0])
+    console.log(data1)
 
 
     console.log("data", data)
@@ -71,27 +73,30 @@
 
     svg.append("g")
         .attr("id", "xAxis")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
         .call(d3.axisBottom(x));
 
     svg.append("g")
         .attr("id", "yAxis")
         .call(d3.axisLeft(y));
 
-    console.log("whyyyy", data)
+    // console.log("whyyyy", data)
     svg.append("g")
         .data([data])
         .enter()
-        .append("path")
+        .append("circle")
         // .datum(d => {return d})
-        .attr("d", line)
-        .style("stroke", d => {console.log("yeee", d, "yooo");return "steelblue"})
+        // .attr("d", line)
+        .attr("cx", 450)
+        .attr("cy", 200)
+        .attr("r", d => {console.log("meee");console.log(d)})
+        .style("stroke", d => {console.log("eee", d, "ooo");return "steelblue"})
         .style("stroke-width", 2)
-        .style("fill", "none")
+        .style("fill", "steelblue")
         .style("opacity", 1)
-    console.log("mmmmm")
+    // console.log("mmmmm")
 
-    // console.log(data[0])
+    console.log(data[0])
     // svg.append("path")
     //     .datum(data[0])
     //     .attr("d", line)
