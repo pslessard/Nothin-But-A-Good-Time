@@ -85,6 +85,55 @@ function error_handler(evt) {
 }
 
 
+function post_process_data(data_dict_arr, name_list) {
+    console.log('data dict arr', data_dict_arr.length);
+    console.log('names', name_list);
+
+    new Promise((resolve, reject) => {
+        let y_vals = {};
+        for (let el of Object.keys(data_dict_arr)) {
+            console.log('el', data_dict_arr[el]);
+            let transpose = [];
+            for (let point of Object.keys(data_dict_arr[el].datapoints)) {
+                if (!isNaN(data_dict_arr[el].datapoints[point])) {
+                    transpose.push(data_dict_arr[el].datapoints[point])
+                }
+            }
+            // console.log(transpose);
+            y_vals[data_dict_arr[el].name] = transpose
+        }
+        resolve(y_vals)
+
+    }).then(y_vals => {
+        console.log('y vals', y_vals);
+
+        let x_vals = [...Array(Object.values(y_vals)[0].length).keys()];
+        console.log('x_vals', x_vals);
+
+        // Reformat data
+        // data = An array of objects, each of which contains an array of objects
+        var data = name_list.map(function (name) {
+            let xy_arr = [];
+            for (let i = 0; i < x_vals.length; i++) {
+                xy_arr.push({
+                    'x': x_vals[i],
+                    'y': y_vals[name][i]
+                })
+            }
+            return {
+                name: name,
+                vals: xy_arr
+            };
+        });
+        console.log("data", data);
+        return data
+    })
+}
+
+
+
+
+
 // function new_upload(obj) {
 //     console.log('started new upload');
 //
