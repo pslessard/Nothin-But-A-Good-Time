@@ -17,6 +17,7 @@
         .append("svg")
         .attr("width", width)
         .attr("height", height)
+        .style("mix-blend-mode", "hard-light")
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -39,21 +40,15 @@
         return tempData;
     };
 
-    let data1 = generateTS();
     data = generateTS();
 
     // TODO comment for 1 TS, uncomment for array of TS
     data = []
-    for (let j = 0; j < 2; j++) {
-        console.log("before", data)
+    for (let j = 0; j < 101; j++) {
+        // console.log("before", data)
         data.push(generateTS())
-        console.log("after", data)
+        // console.log("after", data)
     }
-    data[0] = data1
-
-    console.log("abcdefg", data1.map((d, i) => {return d - data[0][i]}))
-    console.log(data[0])
-    console.log(data1)
 
     var x = d3.scaleLinear()
         .domain([0, data[0].length])
@@ -63,11 +58,27 @@
         .domain([min, max])
         .range([height - margin.top - margin.bottom, 0]);
 
+    let newData = []
+    data.forEach(d => {
+        let max = d3.max(d);
+        let min = d3.min(d)
+       // svg.append("g")
+       //     .selectAll("line")
+       //     .data([mean])
+       //     .enter()
+       //     .append("line")
+       //     .attr("y1", d => y(d))
+       //     .attr("y2", d => y(d))
+       //     .attr("x1", 0)
+       //     .attr("x2", 10000)
+       //     .attr("stroke-width", 1)
+       //     .attr("stroke", "steelblue")
+       //  console.log("mean", mean)
+       //  console.log("stddev", stddev)
 
-    console.log("data", data)
-    console.log(min, max)
-
-    console.log(y.domain(), y(-20), y(0), y(20));
+        d = d.map(pt => { return (pt - min) / (max - min) })
+        newData.push(d)
+    })
 
     let line = d3.line()
         .x((d, i) => {return x(i)})
@@ -82,64 +93,18 @@
         .attr("id", "yAxis")
         .call(d3.axisLeft(y));
 
-    // console.log("whyyyy", data)
-    // TODO using .data().enter(), takes a single TS
-    // svg.append("g")
-    //     .data([data])
-    //     .enter()
-    //     .append("circle")
-    //     // .datum(d => {return d})
-    //     // .attr("d", line)
-    //     .attr("cx", 450)
-    //     .attr("cy", 200)
-    //     .attr("r", d => {console.log("This is never printing", d);console.log(d)})
-    //     .style("stroke", d => {console.log("%%%%%%%%%", d, "%%%%%%%%");return "steelblue"})
-    //     .style("stroke-width", 2)
-    //     .style("fill", "steelblue")
-    //     .style("opacity", 1)
-    // console.log("mmmmm")
-
-    // TODO using .data().enter(), takes an array of TSs
-    // svg.append("g")
-    //     .data(data)
-    //     .enter()
-    //     .append("circle")
-    //     // .datum(d => {return d})
-    //     // .attr("d", line)
-    //     .attr("cx", 450)
-    //     .attr("cy", 200)
-    //     .attr("r", d => {console.log("meee, d");console.log(d)})
-    //     .style("stroke", d => {console.log("eee", d, "ooo");return "steelblue"})
-    //     .style("stroke-width", 2)
-    //     .style("fill", "steelblue")
-    //     .style("opacity", 1)
-
-    // console.log(data[0])
-    // TODO single path at a time, takes an array of TSs
-    svg.append("path")
-        .datum(data[0])
-        .attr("d", line)
-        .style("stroke", d => {console.log("yeee", d, line, line(d));return "steelblue"})
+    // console.log(svg)
+    svg.append("g").selectAll("path")
+        // .data(data.concat(newData))
+        .data(data)
+        .enter()
+        .append("path")
+        .attr("d", d => { return line(d) })
+        // .style("background-color", d => {console.log("meee", d);})
+        .style("stroke", "steelblue")
         .style("stroke-width", 2)
         .style("fill", "none")
-        .style("opacity", 1)
-
-    // TODO single path at a time, takes a single TS
-    // svg.append("path")
-    //     .datum(data)
-    //     .attr("d", line)
-    //     .style("stroke", d => {console.log("yeee");return "steelblue"})
-    //     .style("stroke-width", 2)
-    //     .style("fill", "none")
-    //     .style("opacity", 1)
-
-    // svg.append("path")
-    //     .datum(data1)
-    //     .attr("d", line)
-    //     .style("stroke", d => {console.log("yeee");return "red"})
-    //     .style("stroke-width", 2)
-    //     .style("fill", "none")
-    //     .style("opacity", 1)
+        .style("opacity", 0.1)
 
 </script>
 </body>
