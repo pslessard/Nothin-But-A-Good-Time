@@ -1,4 +1,6 @@
 'use strict';
+let final_arr  = []
+
 
 //gets called when new upload happens
 function new_upload_temp(obj) {
@@ -28,7 +30,7 @@ function new_upload_temp(obj) {
             post_process_data(data_dict_arr, name_list)
         };
         reader.readAsText(f)
-
+        console.log('hii', final_arr)
     }
 }
 
@@ -107,14 +109,14 @@ function post_process_data(data_dict_arr, name_list) {
     }).then(y_vals => {
         console.log('y vals', y_vals);
 
-        let x_vals = [...Array(Object.values(y_vals)[0].length).keys()];
+        let x_vals = [...Array(Object.values(y_vals).length).keys()];
         console.log('x_vals', x_vals);
 
         // Reformat data
         // data = An array of objects, each of which contains an array of objects
         var data = name_list.map(function (name) {
             let xy_arr = [];
-            for (let i = 0; i < x_vals.length; i++) {
+            for (let i = 0; i < y_vals.length; i++) {
                 xy_arr.push({
                     'x': x_vals[i],
                     'y': y_vals[name][i]
@@ -126,8 +128,14 @@ function post_process_data(data_dict_arr, name_list) {
             };
         });
         console.log("data", data);
-        return data
+
+        final_arr.push(data)
     })
+}
+
+
+function get_data(){
+    console.log('heres all the data', final_arr)
 }
 
 
