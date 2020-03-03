@@ -25,9 +25,9 @@
     let datadict = {};
     let min = 100, max = -100;
     let generateTS = () => {
-        let tempData = Array(50001);
+        let tempData = Array(256);
         tempData[0] = 0;
-        for (let i = 1; i <= 50000; i++) {
+        for (let i = 1; i <= 256; i++) {
             let diff = Math.random() - 0.5;
             tempData[i] = tempData[i - 1] + diff;
 
@@ -44,58 +44,62 @@
 
     // TODO comment for 1 TS, uncomment for array of TS
     data = []
-    for (let j = 0; j < 101; j++) {
+    for (let j = 0; j < 250; j++) {
         // console.log("before", data)
         data.push(generateTS())
         // console.log("after", data)
     }
 
+    let x0 = [0, data[0].length];
     var x = d3.scaleLinear()
-        .domain([0, data[0].length])
+        .domain(x0)
         .range([0, width]);
 
+    let y0 = [min, max];
     let y = d3.scaleLinear()
-        .domain([min, max])
+        .domain(y0)
         .range([height - margin.top - margin.bottom, 0]);
 
-    let newData = []
+    let newData = [];
     data.forEach(d => {
         let max = d3.max(d);
-        let min = d3.min(d)
-       // svg.append("g")
-       //     .selectAll("line")
-       //     .data([mean])
-       //     .enter()
-       //     .append("line")
-       //     .attr("y1", d => y(d))
-       //     .attr("y2", d => y(d))
-       //     .attr("x1", 0)
-       //     .attr("x2", 10000)
-       //     .attr("stroke-width", 1)
-       //     .attr("stroke", "steelblue")
-       //  console.log("mean", mean)
-       //  console.log("stddev", stddev)
+        let min = d3.min(d);
+        // svg.append("g")
+        //     .selectAll("line")
+        //     .data([mean])
+        //     .enter()
+        //     .append("line")
+        //     .attr("y1", d => y(d))
+        //     .attr("y2", d => y(d))
+        //     .attr("x1", 0)
+        //     .attr("x2", 10000)
+        //     .attr("stroke-width", 1)
+        //     .attr("stroke", "steelblue")
+        //  console.log("mean", mean)
+        //  console.log("stddev", stddev)
 
-        d = d.map(pt => { return (pt - min) / (max - min) })
+        d = d.map(pt => { return (pt - min) / (max - min) });
         newData.push(d)
-    })
+    });
+
+    let idleTimeout, idleDelay = 350;
 
     let line = d3.line()
         .x((d, i) => {return x(i)})
         .y((d) => {return y(d)});
 
-    svg.append("g")
+    let xAxis = svg.append("g")
         .attr("id", "xAxis")
         .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
         .call(d3.axisBottom(x));
 
-    svg.append("g")
+    let yAxis = svg.append("g")
         .attr("id", "yAxis")
         .call(d3.axisLeft(y));
 
     // console.log(svg)
-    svg.append("g").selectAll("path")
-        // .data(data.concat(newData))
+    let paths = svg.append("g").selectAll("path")
+    // .data(data.concat(newData))
         .data(data)
         .enter()
         .append("path")
@@ -104,7 +108,38 @@
         .style("stroke", "steelblue")
         .style("stroke-width", 2)
         .style("fill", "none")
-        .style("opacity", 0.1)
+        .style("opacity", 0.1);
+
+    let zoom = () => {
+        var selection = d3.event.selection;
+        console.log(selection);
+        if (!selection) {
+            if (!idleTimeout) return idleTimeout = setTimeout(() => {idleTimeout = null}, idleDelay);
+            x.domain(x0);
+            y.domain(y0);
+        } else {
+            x.domain([selection[0][0], selection[1][0]].map(x.invert, x));
+            y.domain([selection[1][1], selection[0][1]].map(y.invert, y));
+            brushG.call(brush.move, null);
+        }
+
+        line = d3.line()
+            .x((d, i) => {return x(i)})
+            .y((d) => {return y(d)});
+        paths.transition().duration(500)
+            .attr("d", function(d) { return line(d); });
+
+        xAxis.transition().duration(500).call(d3.axisBottom(x));
+        yAxis.transition().duration(500).call(d3.axisLeft(y));
+    };
+
+    let brush = d3.brush()
+        .extent( [ [0,0], [width,height] ] )
+        .on("end", zoom);
+
+    let brushG = svg.append("g")
+        .attr("class", "brush")
+        .call(brush)
 
 </script>
 </body>
