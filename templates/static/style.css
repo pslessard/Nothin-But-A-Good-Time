@@ -1,3 +1,17 @@
+/*body {*/
+    /*background-color: #efefef;*/
+/*}*/
+
+/*a {*/
+  /*position: absolute;*/
+  /*left: 0px;*/
+  /*top: -60px;*/
+/*}*/
+
+html {
+	scroll-behavior: smooth;
+}
+
 .home-container {
     position: absolute;
     top: 0;
@@ -12,21 +26,29 @@
   -webkit-text-stroke: 1px black;
 }
 
-.divider {
-    height:20vh;
-}
+
 
 #homebanner {
-    height: 40vh;
+    height: 25vh;
     z-index: 10;
 }
 
 #background-viz {
     background-color: black;
     position: absolute;
-    height: 40vh;
+    height: 25vh;
     width: 100%;
     top: 0;
     left: 0;
     z-index: -1;
+}
+
+.thumbnails {
+    width: 20vw;
+    height: 30vh;
+}
+
+.chart {
+    height: 60vh;
+    width: 100%
 }

@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 function horizon_graph(overlap=5, step=30) {
     new Promise((resolve => {
@@ -28,13 +28,13 @@ function horizon_graph(overlap=5, step=30) {
     })).then((data) => {
 
         let color = i => d3['schemeBlues'][Math.max(3, overlap)][i + Math.max(0, 3 - overlap)]
-        let margin = ({top: 30, right: 10, bottom: 0, left: 10});
-        let width = window.innerWidth - margin.left - margin.right;
+        let margin = ({top: 30, right: 10, bottom: 0, left: 0});
+        let width = window.innerWidth*0.7 - margin.left - margin.right;
         let height = data.length * (step + 1) + margin.top + margin.bottom;
 
         console.log(data[0].values);
 
-        const svg = d3.selectAll('#chart')
+        const svg = d3.selectAll('#horizon-chart')
             .attr("viewBox", [0, 0, width, height])
             .style("font", "10px sans-serif");
 
@@ -118,7 +118,7 @@ function horizon_graph(overlap=5, step=30) {
 //mouse interactions
         function data_on_mouseover() {
             //preparing svg elements needed for text on mouseover
-            let texts = d3.selectAll('svg')
+            let texts = d3.selectAll('#horizon-chart')
                 .append('g')
                 .attr('x', x - 30)
                 .attr('y', 0)
@@ -133,22 +133,22 @@ function horizon_graph(overlap=5, step=30) {
                     .attr("dy", ".35em")
             }
 
-            let guideline = d3.selectAll('svg')
+            let guideline = d3.selectAll('#horizon-chart')
                 .append('line')
                 .style("stroke", "black")
                 .style("stroke-opacity", 1)
 
 
             //mouse interaction
-            let svg_obj = document.getElementById("chart");
+            let svg_obj = document.getElementById("horizon-chart");
             svg_obj.onmousemove = function (e) {
                 var cur_target = e.currentTarget;
 
                 var x = e.offsetX;
                 var y = e.offsetY - margin.top;
 
-                let height_offset = (cur_target.getBoundingClientRect().height - margin.top) / data.length;
-                //also equal to step+1
+                let height_offset =step+1
+                // (cur_target.getBoundingClientRect().height - margin.top) / data.length;
                 let strip_no = Math.floor(y / height_offset);
 
                 // console.log((cur_target.getBoundingClientRect().height - margin.top) / final_arr.length);
@@ -161,7 +161,7 @@ function horizon_graph(overlap=5, step=30) {
                         .transition()
                         .duration(10)
                         .attr("x", x - 50)
-                        .attr("y", height_offset * (i + 1))
+                        .attr("y", (height_offset * (i + 1))+(height_offset/2))
                         .text(data[i]['values'][x]['y'].toFixed(3));
                     guideline
                         .attr("x1", x)
@@ -179,14 +179,6 @@ function horizon_graph(overlap=5, step=30) {
 function add_ranges() {
     let thediv = document.getElementById("ranges");
     if (thediv.innerHTML === "") {
-        // "<form>" +
-        // "  <input name=i type=range min=1 max=${d3.schemeBlues.length - 1} value=7 step=1 style=\"width:180px;\">" +
-        // "  <output style=\"font-size:smaller;font-style:oblique;\" name=o></output>" +
-        // "</form>" +
-        // "  form.i.oninput = () => form.o.value = `${form.value = form.i.valueAsNumber} band${form.i.valueAsNumber === 1 ? \"\" : \"s\"}`;\n" +
-        // "  form.i.oninput();\n" +
-        // "  return form;\n" +
-        // "}"
         let overlap_range = ' <label for="overlap-range">Level of overlap</label>' +
             '<input type="range" class="custom-range" min=1 max=7 step="1" id="overlap-range" onchange="redraw()">';
         let step_range = ' <label for="step-range">Width of section</label>' + '<input type="range" class="custom-range" min=15 max=60 step="5" id="step-range" onchange="redraw()">';

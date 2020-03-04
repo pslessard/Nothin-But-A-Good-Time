@@ -1,5 +1,8 @@
 window.onload = function () {
     load_background(3)
+    // window.addEventListener("hashchange", function () {
+    //     window.scrollTo(window.scrollX, window.scrollY - 1000);
+    // });
 }
 
 let colors = ["#b55774", "#ffb862", "#179ea8"]
@@ -14,7 +17,7 @@ function load_background(num) {
     for (let i = 0; i < num; i++) {
         let arr_x = Array.from(Array(Math.round(window.innerWidth / 70) + 3), (x, index) => index * 70)
         // let height = Math.round(parseInt(document.getElementById("background-viz").getBBox().height))
-        let height = Math.round(window.innerHeight * 0.8 * (i + 1) / 6)
+        let height = Math.round(window.innerHeight * 0.8 * (i + 1) / 7)
         let arr_y = Array(arr_x.length).fill(1).map(d => d3.randomUniform(height * 0.6, height * 0.9)());
         let points = arr_x.map(function (e, i) {
             return [e, arr_y[i]];
@@ -30,7 +33,7 @@ function load_background(num) {
             .attr("d", lineGenerator(points))
             .attr('fill', 'none')
             .attr("stroke", colors[i])
-            .attr("opacity", "1")
+            .attr("opacity", 0.5)
             .attr("stroke-width", 4)
 
         var totalLength = line.node().getTotalLength()
