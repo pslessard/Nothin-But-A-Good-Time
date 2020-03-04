@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Line Chart</title>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-</head>
-<body>
-<script>
-    console.log(d3);
-
+let linechart = () => {
     let opacity = 0.1;
 
     let margin = {top: 20, right: 20, bottom: 20, left: 20},
@@ -17,7 +7,6 @@
 
     let svg = d3.select("body")
         .append("svg")
-        .attr("id", "chart")
         .attr("width", width)
         .attr("height", height)
         .style("mix-blend-mode", "hard-light")
@@ -25,7 +14,7 @@
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     let min = 100, max = -100;
-    let generateTS = (id = "", startTime = 0) => {
+    let generateTS = (id="", startTime = 0) => {
         let tempData = Array(256);
         tempData[0] = {"x": 0, "y": 0, "event": 0};
         for (let i = 1; i <= 256; i++) {
@@ -62,13 +51,15 @@
         return closest;
     };
 
-    // TODO comment for 1 TS, uncomment for array of TS
-    let data = [];
-    for (let j = 0; j < 25; j++) {
-        // console.log("before", data)
-        data.push(generateTS("ts_"+(j%5).toString(), Math.floor(Math.random() * 1500)))
-        // console.log("after", data)
-    }
+    // // TODO comment for 1 TS, uncomment for array of TS
+    // let data = [];
+    // for (let j = 0; j < 25; j++) {
+    //     // console.log("before", data)
+    //     data.push(generateTS("ts_"+(j%5).toString(), Math.floor(Math.random() * 1500)))
+    //     // console.log("after", data)
+    // }
+
+    let data = final_arr;
 
     console.log("data", data);
 
@@ -161,21 +152,15 @@
         //  console.log("mean", mean)
         //  console.log("stddev", stddev)
 
-        let datum = d.vals.map(pt => {
-            return (pt["y"] - min) / (max - min)
-        });
+        let datum = d.vals.map(pt => { return (pt["y"] - min) / (max - min) });
         newData.push(datum)
     });
 
     let idleTimeout, idleDelay = 350;
 
     let line = d3.line()
-        .x((d) => {
-            return x(d["x"])
-        })
-        .y((d) => {
-            return y(d["y"])
-        });
+        .x((d) => {return x(d["x"])})
+        .y((d) => {return y(d["y"])});
 
     let xAxis = svg.append("g")
         .attr("id", "xAxis")
@@ -321,11 +306,8 @@
     zoom = () => {
         let selection = d3.event.selection;
         // console.log(selection);
-
         if (!selection) {
-            if (!idleTimeout) return idleTimeout = setTimeout(() => {
-                idleTimeout = null
-            }, idleDelay);
+            if (!idleTimeout) return idleTimeout = setTimeout(() => {idleTimeout = null}, idleDelay);
             x.domain(x0);
             y.domain(y0);
         } else {
@@ -335,16 +317,10 @@
         }
 
         line = d3.line()
-            .x((d) => {
-                return x(d["x"])
-            })
-            .y((d) => {
-                return y(d["y"])
-            });
+            .x((d) => {return x(d["x"])})
+            .y((d) => {return y(d["y"])});
         paths.transition().duration(500)
-            .attr("d", function (d) {
-                return line(d.vals);
-            });
+            .attr("d", function(d) { return line(d.vals); });
 
         xAxis.transition().duration(500).call(d3.axisBottom(x));
         yAxis.transition().duration(500).call(d3.axisLeft(y));
@@ -357,7 +333,4 @@
     };
 
     brush.on("end", zoom);
-
-</script>
-</body>
-</html>
+};
