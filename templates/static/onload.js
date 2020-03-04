@@ -1,9 +1,9 @@
 'use strict';
-let final_arr  = []
+let final_arr = []
 
 
 //gets called when new upload happens
-function new_upload_temp(obj) {
+async function new_upload_temp(obj) {
 
     console.log('started new upload');
 
@@ -18,7 +18,7 @@ function new_upload_temp(obj) {
         reader.onerror = error_handler;
         name_list.push(f.name);
         var extension = f.name.split('.').pop().toLowerCase();//file extension from input file
-        reader.onload = e => {
+        reader.onload = async e => {
             if (extension === 'csv') {
                 data_dict_arr = read_csv(e, f.name)
             }
@@ -27,9 +27,9 @@ function new_upload_temp(obj) {
             }
 
             //this will get the data as an array of dicts with x and y values nicely organized
-            post_process_data(data_dict_arr, name_list)
+            await post_process_data(data_dict_arr, f.name)
         };
-        reader.readAsText(f)
+        reader.readAsText(f);
         console.log('hii', final_arr)
     }
 }
@@ -38,7 +38,7 @@ function new_upload_temp(obj) {
 //handles what happens on json file load
 function read_json(event, filename) {
     let data_dict_arr = [];
-    data_dict_arr.push(JSON.parse(event.target.result))
+    data_dict_arr.push(JSON.parse(event.target.result));
     return data_dict_arr
 }
 
@@ -87,12 +87,12 @@ function error_handler(evt) {
 }
 
 
-function post_process_data(data_dict_arr, name_list) {
+function post_process_data(data_dict_arr, name) {
     console.log('data dict arr', data_dict_arr.length);
-    console.log('names', name_list);
+    console.log('name', name);
 
-    new Promise((resolve, reject) => {
-        let y_vals = {};
+    return new Promise((resolve, reject) => {
+        let y_vals = [];
         for (let el of Object.keys(data_dict_arr)) {
             console.log('el', data_dict_arr[el]);
             let transpose = [];
@@ -102,44 +102,41 @@ function post_process_data(data_dict_arr, name_list) {
                 }
             }
             // console.log(transpose);
-            y_vals[data_dict_arr[el].name] = transpose
+            y_vals = transpose
         }
         resolve(y_vals)
 
     }).then(y_vals => {
         console.log('y vals', y_vals);
 
-        let x_vals = [...Array(Object.values(y_vals).length).keys()];
+        let x_vals = [...Array(y_vals.length).keys()];
         console.log('x_vals', x_vals);
 
         // Reformat data
         // data = An array of objects, each of which contains an array of objects
-        var data = name_list.map(function (name) {
-            let xy_arr = [];
-            for (let i = 0; i < y_vals.length; i++) {
-                xy_arr.push({
-                    'x': x_vals[i],
-                    'y': y_vals[name][i]
-                })
-            }
-            return {
-                name: name,
-                vals: xy_arr
-            };
-        });
-        console.log("data", data);
+        let xy_arr = []
+        for (let i = 0; i < y_vals.length; i++) {
+            xy_arr.push({
+                'x': x_vals[i],
+                'y': y_vals[i]
+            })
+        }
 
+        let data = {
+            name: name,
+            vals: xy_arr
+        };
+        console.log("data", data);
         final_arr.push(data)
+        return data
     })
 }
 
 
-function get_data(){
+function get_data() {
     console.log('heres all the data', final_arr)
+    graph()
 }
-
-
-
 
 
 // function new_upload(obj) {
