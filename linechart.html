@@ -24,37 +24,64 @@
     let data = [];
     let datadict = {};
     let min = 100, max = -100;
-    let generateTS = () => {
+    let generateTS = (id="", startTime = 0) => {
         let tempData = Array(256);
-        tempData[0] = 0;
+        tempData[0] = {"x": 0, "y": 0};
         for (let i = 1; i <= 256; i++) {
             let diff = Math.random() - 0.5;
-            tempData[i] = tempData[i - 1] + diff;
+            tempData[i] = {
+                "x": i + startTime,
+                "y": tempData[i - 1]["y"] + diff
+            };
 
-            if (tempData[i] > max) {
-                max = tempData[i]
-            } else if (tempData[i] < min) {
-                min = tempData[i]
+            if (tempData[i]["y"] > max) {
+                max = tempData[i]["y"]
+            } else if (tempData[i]["y"] < min) {
+                min = tempData[i]["y"]
             }
         }
-        return tempData;
-    };
 
-    data = generateTS();
+        let tempDict = {"name": id};
+        tempDict["vals"] = tempData.slice(1);
+        return tempDict;
+    };
+    // [{"name": name, "vals": [{"x": x, "y": y}]}]
 
     // TODO comment for 1 TS, uncomment for array of TS
-    data = []
-    for (let j = 0; j < 250; j++) {
+    data = [];
+    for (let j = 0; j < 2500; j++) {
         // console.log("before", data)
-        data.push(generateTS())
+        data.push(generateTS(j.toString(), Math.floor(Math.random() * 150000)))
         // console.log("after", data)
     }
 
-    let x0 = [0, data[0].length];
+    console.log(data);
+
+    let xmax = d3.max(data, dt => {
+        return d3.max(dt.vals, datum => {
+            return datum.x;
+        });
+    });
+    let xmin = d3.min(data, dt => {
+        return d3.min(dt.vals, datum => {
+            return datum.x;
+        });
+    });
+    let x0 = [xmin, xmax];
     var x = d3.scaleLinear()
         .domain(x0)
         .range([0, width]);
 
+    max = d3.max(data, dt => {
+        return d3.max(dt.vals, datum => {
+            return datum.y;
+        });
+    });
+    min = d3.min(data, dt => {
+        return d3.min(dt.vals, datum => {
+            return datum.y;
+        });
+    });
     let y0 = [min, max];
     let y = d3.scaleLinear()
         .domain(y0)
@@ -62,8 +89,8 @@
 
     let newData = [];
     data.forEach(d => {
-        let max = d3.max(d);
-        let min = d3.min(d);
+        let max = d3.max(d.vals, pt => pt.y);
+        let min = d3.min(d.vals, pt => pt.y);
         // svg.append("g")
         //     .selectAll("line")
         //     .data([mean])
@@ -78,15 +105,15 @@
         //  console.log("mean", mean)
         //  console.log("stddev", stddev)
 
-        d = d.map(pt => { return (pt - min) / (max - min) });
-        newData.push(d)
+        let datum = d.vals.map(pt => { return (pt["y"] - min) / (max - min) });
+        newData.push(datum)
     });
 
     let idleTimeout, idleDelay = 350;
 
     let line = d3.line()
-        .x((d, i) => {return x(i)})
-        .y((d) => {return y(d)});
+        .x((d) => {return x(d["x"])})
+        .y((d) => {return y(d["y"])});
 
     let xAxis = svg.append("g")
         .attr("id", "xAxis")
@@ -103,12 +130,17 @@
         .data(data)
         .enter()
         .append("path")
-        .attr("d", d => { return line(d) })
+        .attr("d", d => {return line(d.vals) })
         // .style("background-color", d => {console.log("meee", d);})
         .style("stroke", "steelblue")
         .style("stroke-width", 2)
         .style("fill", "none")
+        // .style("opacity", 1);
         .style("opacity", 0.1);
+
+    paths.on("mouseover", d => {
+        console.log("s", d)
+    })
 
     let zoom = () => {
         var selection = d3.event.selection;
@@ -124,10 +156,10 @@
         }
 
         line = d3.line()
-            .x((d, i) => {return x(i)})
-            .y((d) => {return y(d)});
+            .x((d) => {return x(d["x"])})
+            .y((d) => {return y(d["y"])});
         paths.transition().duration(500)
-            .attr("d", function(d) { return line(d); });
+            .attr("d", function(d) { return line(d.vals); });
 
         xAxis.transition().duration(500).call(d3.axisBottom(x));
         yAxis.transition().duration(500).call(d3.axisLeft(y));
