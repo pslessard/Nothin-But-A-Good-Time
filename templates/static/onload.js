@@ -135,7 +135,7 @@ function post_process_data(data_dict_arr, name) {
 
 function get_data() {
     console.log('heres all the data', final_arr)
-    graph()
+    small_multiples_graph()
 }
 
 

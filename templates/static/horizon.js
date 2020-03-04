@@ -1,6 +1,6 @@
 'use strict'
 
-function graph() {
+function horizon_graph(overlap=3) {
     new Promise((resolve => {
         // console.log('final arr here')
         let prelim_data = [];
@@ -29,7 +29,6 @@ function graph() {
 
         let counter = 0;
         let step = 50;
-        let overlap = 3;
         let color = i => d3['schemeBlues'][Math.max(3, overlap)][i + Math.max(0, 3 - overlap)]
         let margin = ({top: 30, right: 10, bottom: 0, left: 10});
         let width = window.innerWidth - margin.left - margin.right;
