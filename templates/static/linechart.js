@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Line Chart</title>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-</head>
-<body>
-<script>
-    console.log(d3);
-
+let linechart = () => {
     let opacity = 0.1;
 
     let margin = {top: 20, right: 20, bottom: 20, left: 20},
@@ -61,13 +51,15 @@
         return closest;
     };
 
-    // TODO comment for 1 TS, uncomment for array of TS
-    let data = [];
-    for (let j = 0; j < 25; j++) {
-        // console.log("before", data)
-        data.push(generateTS("ts_"+(j%5).toString(), Math.floor(Math.random() * 1500)))
-        // console.log("after", data)
-    }
+    // // TODO comment for 1 TS, uncomment for array of TS
+    // let data = [];
+    // for (let j = 0; j < 25; j++) {
+    //     // console.log("before", data)
+    //     data.push(generateTS("ts_"+(j%5).toString(), Math.floor(Math.random() * 1500)))
+    //     // console.log("after", data)
+    // }
+
+    let data = final_arr;
 
     console.log("data", data);
 
@@ -341,7 +333,4 @@
     };
 
     brush.on("end", zoom);
-
-</script>
-</body>
-</html>
+};
