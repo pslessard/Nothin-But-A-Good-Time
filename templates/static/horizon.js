@@ -1,6 +1,6 @@
 'use strict'
 
-function horizon_graph(overlap=3) {
+function horizon_graph(overlap = 3) {
     new Promise((resolve => {
         // console.log('final arr here')
         let prelim_data = [];
@@ -27,7 +27,6 @@ function horizon_graph(overlap=3) {
         resolve(data)
     })).then((data) => {
 
-        let counter = 0;
         let step = 50;
         let color = i => d3['schemeBlues'][Math.max(3, overlap)][i + Math.max(0, 3 - overlap)]
         let margin = ({top: 30, right: 10, bottom: 0, left: 10});
@@ -36,6 +35,10 @@ function horizon_graph(overlap=3) {
 
         console.log(data[0].values);
 
+        const svg = d3.selectAll('#chart')
+            .attr("viewBox", [0, 0, width, height])
+            .style("font", "10px sans-serif");
+
         let area = d3.area()
             .curve(d3.curveBasis)
             .defined(d => !isNaN(d.y))
@@ -43,25 +46,24 @@ function horizon_graph(overlap=3) {
             .y0(0)
             .y1(d => y(d.y));
 
+        let y0 = [0, d3.max(data, d => d3.max(d.values, d => d.y))];
+        let y = d3.scaleLinear()
+            .domain(y0)
+            .range([0, -overlap * step])
 
-        let xAxis = g => g
+
+        let x0 = [data[0].values[0].x, data[0].values[data[0].values.length - 1].x]
+        let x = d3.scaleLinear()
+            .domain(x0)
+            .range([0, width])
+
+
+        let xAxis = svg.append("g")
             .attr("transform", `translate(0,${margin.top})`)
             .call(d3.axisTop(x).ticks(width / 80).tickSizeOuter(0))
             .call(g => g.selectAll(".tick").filter(d => x(d) < margin.left || x(d) >= width - margin.right).remove())
             .call(g => g.select(".domain").remove())
 
-        let y = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d3.max(d.values, d => d.y))])
-            .range([0, -overlap * step])
-
-        let x = d3.scaleLinear()
-            .domain([data[0].values[0].x, data[0].values[data[0].values.length - 1].x])
-            .range([0, width])
-
-
-        const svg = d3.selectAll('#chart')
-            .attr("viewBox", [0, 0, width, height])
-            .style("font", "10px sans-serif");
 
         const g = svg.append("g")
             .selectAll("g")
@@ -77,17 +79,16 @@ function horizon_graph(overlap=3) {
             })
             .append("rect")
             .attr("width", width)
-            .attr("height", step)
+            .attr("height", step);
 
 
-        counter = 0;
         g.append("defs")
             .append("path")
             .attr("id", d => {
                 d.path = "apath" + gen_class(d.key);
                 return d.path
             })
-            .attr("d", d => area(d.values))
+            .attr("d", d => area(d.values));
 
         g.append("g")
             .attr("clip-path", d => "url(#" + d.clip + ")")
@@ -96,11 +97,7 @@ function horizon_graph(overlap=3) {
             .join("use")
             .attr("fill", (d, i) => color(i))
             .attr("transform", (d, i) => `translate(0,${(i + 1) * step})`)
-            .attr("xlink:href", d => "#" + d.path)
-        // .on("mouseover", (event, d) => {
-        //         console.log('mouseover',d, event)
-        //     })
-
+            .attr("xlink:href", d => "#" + d.path);
 
         g.append("text")
             .attr("x", 4)
@@ -108,78 +105,76 @@ function horizon_graph(overlap=3) {
             .attr("dy", "0.35em")
             .text(d => d.key);
 
-        svg.append("g")
-            .call(xAxis)
+        // svg.append("g")
+        // .call(xAxis);
 
-        // document.getElementById('chart').addEventListener("mouseover", function(event){
-        //     // console.log('height', document.getElementById("chart").clientHeight)
-        //     let svg_height = document.getElementById("chart").clientHeight
-        //     let vertical_split = svg_height/final_arr.length;
-        //     console.log('vertical split', vertical_split);
-        //     // console.log('mouseover', event)
-        // })
-        let texts = d3.selectAll('svg')
-            .append('g')
-            .attr('x', x - 30)
-            .attr('y', 0)
-            .attr('height', height - margin.top);
-
-        for (let i = 0; i < data.length; i++) {
-            console.log(data[i])
-            texts.append("text")
-                .attr("x", 0)
-                .attr("y", 0)
-                .attr("id", "text_" + String(i))
-                .attr("dy", ".35em")
-        }
-
-        let guideline = d3.selectAll('svg')
-            .append('line')
-            .style("stroke", "black")
-            .style("stroke-opacity", 1)
-
-
-        //mouse interaction
-        let svg_obj = document.getElementById("chart")
-        svg_obj.onmousemove = function (e) {
-            var cur_target = e.currentTarget
-
-            var x = e.offsetX
-            var y = e.offsetY - margin.top
-
-            let height_offset = (cur_target.getBoundingClientRect().height - margin.top) / data.length;
-            let strip_no = Math.floor(y / height_offset)
-
-            // console.log((cur_target.getBoundingClientRect().height - margin.top) / final_arr.length);
-            // console.log('x', x);
-            // console.log('y', y);
-            // console.log('strip', strip_no)
-
-            for (let i = 0; i < data.length; i++) {
-                d3.selectAll("#text_" + String(i))
-                    .transition()
-                    .duration(10)
-                    .attr("x", x - 50)
-                    .attr("y", height_offset * (i + 1))
-                    .text(data[i]['values'][x]['y'].toFixed(3))
-                guideline
-                    .attr("x1", x)
-                    .attr("x2", x)
-                    .attr('y1', margin.top)
-                    .attr('y2', height)
-
-            }
-        }
+        data_on_mouseover() //shows values of arrays as the mouse moves
 
 
         console.log('data at the end of horizon chart', data)
         return svg.node();
 
 
+//mouse interactions
+        function data_on_mouseover() {
+            //preparing svg elements needed for text on mouseover
+            let texts = d3.selectAll('svg')
+                .append('g')
+                .attr('x', x - 30)
+                .attr('y', 0)
+                .attr('height', height - margin.top);
+
+            for (let i = 0; i < data.length; i++) {
+                console.log(data[i])
+                texts.append("text")
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .attr("id", "text_" + String(i))
+                    .attr("dy", ".35em")
+            }
+
+            let guideline = d3.selectAll('svg')
+                .append('line')
+                .style("stroke", "black")
+                .style("stroke-opacity", 1)
+
+
+            //mouse interaction
+            let svg_obj = document.getElementById("chart")
+            svg_obj.onmousemove = function (e) {
+                var cur_target = e.currentTarget
+
+                var x = e.offsetX
+                var y = e.offsetY - margin.top
+
+                let height_offset = (cur_target.getBoundingClientRect().height - margin.top) / data.length;
+                //also equal to step+1
+                let strip_no = Math.floor(y / height_offset)
+
+                // console.log((cur_target.getBoundingClientRect().height - margin.top) / final_arr.length);
+                // console.log('x', x);
+                // console.log('y', y);
+                // console.log('strip', strip_no)
+
+                for (let i = 0; i < data.length; i++) {
+                    d3.selectAll("#text_" + String(i))
+                        .transition()
+                        .duration(10)
+                        .attr("x", x - 50)
+                        .attr("y", height_offset * (i + 1))
+                        .text(data[i]['values'][x]['y'].toFixed(3))
+                    guideline
+                        .attr("x1", x)
+                        .attr("x2", x)
+                        .attr('y1', margin.top)
+                        .attr('y2', height)
+
+                }
+            }
+        }
     })
-
-
 }
+
 
 function gen_class(d) {
     d = d.split(" ").join("");
@@ -193,3 +188,51 @@ function gen_class(d) {
 
     return d
 }
+
+
+  // //zooming
+        //
+        // let idleTimeout, idleDelay = 350;
+        // let zoom = () => {
+        //
+        //
+        //     var selection = d3.event.selection;
+        //     console.log(selection);
+        //     if (!selection) {
+        //         if (!idleTimeout) return idleTimeout = setTimeout(() => {
+        //             idleTimeout = null
+        //         }, idleDelay);
+        //         x.domain(x0);
+        //         y.domain(y0);
+        //     } else {
+        //         x.domain([selection[0][0], selection[1][0]].map(x.invert, x));
+        //         y.domain([selection[1][1], selection[0][1]].map(y.invert, y));
+        //         brushG.call(brush.move, null);
+        //     }
+        //
+        //     d3.selectAll("path")
+        //         .transition().duration(500)
+        //         .attr("d", d => area(d.values))
+        //
+        //     // d3.selectAll("use")
+        //     //     .data(d => new Array(overlap).fill(d))
+        //     //     .attr("fill", (d, i) => color(i))
+        //     //     .attr("transform", (d, i) => `translate(0,${(i + 1) * step})`)
+        //
+        //     xAxis
+        //     // .transition()
+        //     // .duration(500)
+        //         .call(d3.axisTop(x).ticks(width / 80).tickSizeOuter(0))
+        //         .call(g => g.selectAll(".tick").filter(d => x(d) < margin.left || x(d) >= width - margin.right).remove())
+        //         .call(g => g.select(".domain").remove())
+        //
+        //     // yAxis.transition().duration(500).call(d3.axisLeft(y));
+        // };
+        //
+        // let brush = d3.brush()
+        //     .extent([[0, 0], [width, height]])
+        //     .on("end", zoom);
+        //
+        // let brushG = svg.append("g")
+        //     .attr("class", "brush")
+        //     .call(brush)

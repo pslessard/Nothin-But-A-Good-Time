@@ -15,6 +15,7 @@
 
     let svg = d3.select("body")
         .append("svg")
+        .attr("id", "chart")
         .attr("width", width)
         .attr("height", height)
         .style("mix-blend-mode", "hard-light")
@@ -24,7 +25,7 @@
     let data = [];
     let datadict = {};
     let min = 100, max = -100;
-    let generateTS = (id="", startTime = 0) => {
+    let generateTS = (id = "", startTime = 0) => {
         let tempData = Array(256);
         tempData[0] = {"x": 0, "y": 0};
         for (let i = 1; i <= 256; i++) {
@@ -55,7 +56,7 @@
         // console.log("after", data)
     }
 
-    console.log(data);
+    console.log('data here', data);
 
     let xmax = d3.max(data, dt => {
         return d3.max(dt.vals, datum => {
@@ -105,15 +106,21 @@
         //  console.log("mean", mean)
         //  console.log("stddev", stddev)
 
-        let datum = d.vals.map(pt => { return (pt["y"] - min) / (max - min) });
+        let datum = d.vals.map(pt => {
+            return (pt["y"] - min) / (max - min)
+        });
         newData.push(datum)
     });
 
     let idleTimeout, idleDelay = 350;
 
     let line = d3.line()
-        .x((d) => {return x(d["x"])})
-        .y((d) => {return y(d["y"])});
+        .x((d) => {
+            return x(d["x"])
+        })
+        .y((d) => {
+            return y(d["y"])
+        });
 
     let xAxis = svg.append("g")
         .attr("id", "xAxis")
@@ -130,23 +137,115 @@
         .data(data)
         .enter()
         .append("path")
-        .attr("d", d => {return line(d.vals) })
+        .attr("d", d => {
+            return line(d.vals)
+        })
+        .attr("id", d => "path_" + String(d.name))
         // .style("background-color", d => {console.log("meee", d);})
         .style("stroke", "steelblue")
         .style("stroke-width", 2)
         .style("fill", "none")
         // .style("opacity", 1);
-        .style("opacity", 0.1);
+        .style("opacity", 0.1)
 
-    paths.on("mouseover", d => {
-        console.log("s", d)
-    })
+
+    //mouse moving things here
+
+    // svg.on("mousemove", function () {
+    //     var x = d3.event.pageX - margin.left;
+    //     var y = d3.event.pageY - margin.top
+    //     console.log('x y', x, y)
+    //     // var beginning = x, end = pathLength, y;
+    //     for (let i=0; i<data.length; i++){
+    //         let pathEl = document.getElementById("path_"+String(i))
+    //         let pos = pathEl.getPointAtLength(y);
+    //         // if (pos.x > x) end = target;
+    //         // else if (pos.x < x) beginning = target;
+    //         if (pos.x = x) {
+    //             console.log('found itTT', pathEl)//position found
+    //             d3.selectAll('path')
+    //                 .style("stroke-width", 2)
+    //                 .style("opacity", 0.1)
+    //
+    //             d3.select(pathEl)
+    //                 .transition()
+    //                 .style("stroke-width", 3)
+    //                 .style("opacity", 1)
+    //             break
+    //         }
+    //     }
+    //
+    // });
+    let svg_obj = document.getElementById("chart")
+    svg_obj.onmousemove = function (e) {
+        console.log("mousemove")
+        var cur_target = e.currentTarget
+
+        var half = (height-margin.top)/2
+        var yscale = (height-margin.top-margin.bottom)/(max-min);
+        var xscale = (width - margin.left)/x0[1]
+
+
+        var x = (e.offsetX - margin.left)/xscale
+        var y = (height - e.offsetY - margin.top - half)/yscale;
+
+        console.log('yscale', yscale)
+        console.log('xscale', xscale)
+
+        // let height_offset = (cur_target.getBoundingClientRect().height - margin.top) / data.length;
+        //also equal to step+1
+        // let strip_no = Math.floor(y / height_offset)
+        // console.log((cur_target.getBoundingClientRect().height - margin.top) / final_arr.length);
+        console.log('x', x);
+        console.log('y', y);
+
+        for(let datum of data){
+             for(let pair of datum.vals){
+                if(pair['x']===Math.round(x) && pair['y']===Math.round(y)){
+                    console.log('found')
+                    d3.selectAll("#path_"+String(d.name))
+                        .transition()
+                        .style("stroke-width", 4)
+                }
+            }
+        }
+
+        //  for (let i=0; i<data.length; i++){
+        //     let pathEl = document.getElementById("path_"+String(i))
+        //     let pos = pathEl.getPointAtLength(y);
+        //     // if (pos.x > x) end = target;
+        //     // else if (pos.x < x) beginning = target;
+        //     if (pos.x = x) {
+        //         console.log('found itTT', pathEl)//position found
+        //         d3.selectAll('path')
+        //             .style("stroke-width", 2)
+        //             .style("opacity", 0.1)
+        //
+        //         d3.select(pathEl)
+        //             .transition()
+        //             .style("stroke-width", 3)
+        //             .style("opacity", 1)
+        //
+        //     }
+        // }
+
+    };
+    ////////////////////////////////////////////
+
+
+    // var pathEl = paths.node();
+
+    // var scale = pathLength / BBox.width;
+    // var offsetLeft = document.getElementById("line").offsetLeft;
+
 
     let zoom = () => {
         var selection = d3.event.selection;
         console.log(selection);
         if (!selection) {
-            if (!idleTimeout) return idleTimeout = setTimeout(() => {idleTimeout = null}, idleDelay);
+            if (!idleTimeout) return idleTimeout = setTimeout(() => {
+                idleTimeout = null
+            }, idleDelay);
             x.domain(x0);
             y.domain(y0);
         } else {
@@ -156,17 +255,23 @@
         }
 
         line = d3.line()
-            .x((d) => {return x(d["x"])})
-            .y((d) => {return y(d["y"])});
+            .x((d) => {
+                return x(d["x"])
+            })
+            .y((d) => {
+                return y(d["y"])
+            });
         paths.transition().duration(500)
-            .attr("d", function(d) { return line(d.vals); });
+            .attr("d", function (d) {
+                return line(d.vals);
+            });
 
         xAxis.transition().duration(500).call(d3.axisBottom(x));
         yAxis.transition().duration(500).call(d3.axisLeft(y));
     };
 
     let brush = d3.brush()
-        .extent( [ [0,0], [width,height] ] )
+        .extent([[0, 0], [width, height]])
         .on("end", zoom);
 
     let brushG = svg.append("g")
