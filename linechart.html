@@ -49,9 +49,9 @@
 
     // TODO comment for 1 TS, uncomment for array of TS
     data = [];
-    for (let j = 0; j < 2500; j++) {
+    for (let j = 0; j < 25; j++) {
         // console.log("before", data)
-        data.push(generateTS(j.toString(), Math.floor(Math.random() * 150000)))
+        data.push(generateTS(j.toString(), Math.floor(Math.random() * 1)))
         // console.log("after", data)
     }
 
@@ -124,26 +124,61 @@
         .attr("id", "yAxis")
         .call(d3.axisLeft(y));
 
+    let brush = d3.brush()
+        .extent( [ [0,0], [width,height] ] )
+
+    let brushG = svg.append("g")
+        .attr("class", "brush")
+        .call(brush)
+
     // console.log(svg)
+    let opacity = 0.1;
     let paths = svg.append("g").selectAll("path")
-    // .data(data.concat(newData))
         .data(data)
         .enter()
         .append("path")
         .attr("d", d => {return line(d.vals) })
-        // .style("background-color", d => {console.log("meee", d);})
-        .style("stroke", "steelblue")
-        .style("stroke-width", 2)
-        .style("fill", "none")
-        // .style("opacity", 1);
-        .style("opacity", 0.1);
+        .attr('pointer-events', 'stroke')
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 2)
+        .attr("fill", "none")
+        .attr("opacity", opacity);
 
-    paths.on("mouseover", d => {
-        console.log("s", d)
+    paths.on("mouseover", (d, i, nodes) => {
+        console.log(d);
+        d3.select(nodes[i])
+            .attr("opacity", 1)
+            .attr("stroke-width", 3);
     })
+        .on("mouseleave", (d, i, nodes) => {
+            if (!"selected" in d || !d.selected) {
+                d3.select(nodes[i])
+                    .attr("opacity", opacity)
+                    .attr("stroke-width", 2);
+            }
+        })
+        .on("click", (d, i, nodes) => {
+            if ("selected" in d) {
+                d.selected = !d.selected;
+            }
+            else {
+                d["selected"] = true;
+            }
 
-    let zoom = () => {
-        var selection = d3.event.selection;
+            if (d.selected) {
+                d3.select(nodes[i])
+                    .attr("opacity", 1)
+                    .attr("stroke-width", 3);
+            }
+            else {
+                d3.select(nodes[i])
+                    .attr("opacity", opacity)
+                    .attr("stroke-width", 2);
+            }
+        });
+
+    zoom = () => {
+        let selection = d3.event.selection;
         console.log(selection);
         if (!selection) {
             if (!idleTimeout) return idleTimeout = setTimeout(() => {idleTimeout = null}, idleDelay);
@@ -165,13 +200,7 @@
         yAxis.transition().duration(500).call(d3.axisLeft(y));
     };
 
-    let brush = d3.brush()
-        .extent( [ [0,0], [width,height] ] )
-        .on("end", zoom);
-
-    let brushG = svg.append("g")
-        .attr("class", "brush")
-        .call(brush)
+    brush.on("end", zoom);
 
 </script>
 </body>
