@@ -135,35 +135,12 @@ function post_process_data(data_dict_arr, name) {
 
 function get_data() {
     console.log('heres all the data', final_arr)
-    small_multiples_graph()
+    add_ranges()
+    let o = document.getElementById("overlap-range").value
+    let s = document.getElementById("step-range").value
+    console.log("o s", o, s)
+    horizon_graph(parseInt(o), parseInt(s))
 }
-
-
-// function new_upload(obj) {
-//     console.log('started new upload');
-//
-//     // console.log(obj.id)
-//     console.log(obj.files);
-//     let files = obj.files; // FileList object
-//     let name_list = [];
-//     for (let i = 0, f; f = files[i]; i++) {
-//         let reader = new FileReader();
-//         var extension = f.name.split('.').pop().toLowerCase();//file extension from input file
-//         if(extension==='csv'){
-//             reader.onload = e => {read_csv(e, f.name);};
-//             reader.readAsText(f);
-//         }
-//         else if (extension==='json'){
-//             reader.onload = e => {read_json(e, f.name);}
-//         }
-//         reader.onerror = error_handler;
-//         name_list.push(f.name);
-//     }
-//     let nextSibling = obj.nextElementSibling;
-//     nextSibling.innerText = name_list;
-//     console.log('data dict arr', data_dict_arr)
-//     make_d3_graph(data_dict_arr,name_list)
-// }
 
 
 //csv file handling functions
