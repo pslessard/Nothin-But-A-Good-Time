@@ -1,0 +1,32 @@
+.home-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 300vh;
+}
+
+.headertext {
+    color: whitesmoke;
+    font-family: 'Microsoft Tai Le', sans-serif;
+    letter-spacing: 2px;
+  -webkit-text-stroke: 1px black;
+}
+
+.divider {
+    height:20vh;
+}
+
+#homebanner {
+    height: 40vh;
+    z-index: 10;
+}
+
+#background-viz {
+    background-color: black;
+    position: absolute;
+    height: 40vh;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
