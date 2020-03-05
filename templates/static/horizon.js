@@ -6,16 +6,16 @@ function horizon_graph(overlap = 5, step = 30) {
         let prelim_data = [];
         console.log('final arr', final_arr);
         final_arr.forEach(d => {
-            // console.log('hi', d);
             let adict = {};
-            // console.log('hey', d.vals)
             for (let v of d.vals) {
-                prelim_data.push({
-                    'name': d.name,
-                    'x': v.x,
-                    'y': v.y
-                })
-            }
+                // if (!isNaN(v.x) && !isNaN((v.y))) {
+                    prelim_data.push({
+                        'name': d.name,
+                        'x': v.x,
+                        'y': v.y
+                    })
+                }
+            // }
         });
         let data = d3.nest()
             .key(d => d.name)
@@ -87,7 +87,7 @@ function horizon_graph(overlap = 5, step = 30) {
                 d.path = "apath" + gen_class(d.key);
                 return d.path
             })
-            .attr("d", d => area(d.values));
+            .attr("d", d => {console.log('values hearererrereee', d.values); return area(d.values)});
 
         g.append("g")
             .attr("clip-path", d => "url(#" + d.clip + ")")
@@ -150,32 +150,34 @@ function horizon_graph(overlap = 5, step = 30) {
                 var y = e.pageY - $('#horizon-chart').offset().top;
                 console.log('x y', x, y)
 
-                let height_offset = step+1
-                    // (cur_target.getBoundingClientRect().height - margin.top) / data.length;
+                let height_offset = step + 1
+                // (cur_target.getBoundingClientRect().height - margin.top) / data.length;
                 //step + 1
                 let strip_no = Math.floor(y / height_offset);
 
 
-                let x_scale =data[0].values.length/(window.innerWidth-100-margin.right)
-                let arr_val = Math.floor(x*x_scale)
-                let s = window.innerWidth/(window.innerWidth-margin.left)
+                let x_scale = data[0].values.length / (window.innerWidth - 100 - margin.right)
+                let arr_val = Math.floor(x * x_scale)
+                let s = window.innerWidth / (window.innerWidth - margin.left)
 
                 for (let i = 0; i < data.length; i++) {
 
-                    if(x<0){x=0}
+                    if (x < 0) {
+                        x = 0
+                    }
                     d3.selectAll("#text_" + String(i))
                         .transition()
                         .duration(10)
                         .attr("x", x - 40)
-                        .attr("y", 2+(height_offset * (i + 1.01)))
+                        .attr("y", 2 + (height_offset * (i + 1.01)))
                         .text(data[i]['values'][arr_val]['y'].toFixed(3));
 
 
                     guideline
-                        .attr("x1", x*s)
-                        .attr("x2", x*s)
+                        .attr("x1", x * s)
+                        .attr("x2", x * s)
                         .attr('y1', margin.top)
-                        .attr('y2', height-margin.top)
+                        .attr('y2', height - margin.top)
 
                 }
             }

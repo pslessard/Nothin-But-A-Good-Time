@@ -51,7 +51,7 @@ function load_background(num) {
         let points = arr_x.map(function (e, i) {
             return [e, arr_y[i]];
         });
-        console.log(points)
+        // console.log(points)
 
         let line = svg.append("path")
             .attr("class", "line")
@@ -73,6 +73,5 @@ function load_background(num) {
             .delay(200 * (i + 1))
             .duration(4000)
             .attr("stroke-dashoffset", 0);
-
     }
 }
