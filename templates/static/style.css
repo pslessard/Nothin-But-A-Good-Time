@@ -34,7 +34,7 @@ html {
 }
 
 #background-viz {
-    background-color: black;
+    background-color: #080e21;
     position: absolute;
     height: 25vh;
     width: 100%;
@@ -50,5 +50,5 @@ html {
 
 .chart {
     height: 60vh;
-    width: 100%
+    /*width: 100%*/
 }
