@@ -159,7 +159,7 @@ let linechart = () => {
     let idleTimeout, idleDelay = 350;
 
     let line = d3.line()
-        .defined(d => !isNaN(d.y))
+        .defined(d => {return !isNaN(d.y)})
         .x((d) => {return x(d.x)})
         .y((d) => {return y(d.y)});
 
@@ -365,7 +365,7 @@ let linechart = () => {
             brushG.call(brush.move, null);
         }
 
-        line = d3.line()
+        line
             .x((d) => {
                 return x(d["x"])
             })

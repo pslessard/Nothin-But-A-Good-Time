@@ -162,6 +162,8 @@ function load_local(num) {
     }
     else if (num === 2) {
         //load philippes data
+        let path = "templates/static/data/set_2";
+        read_philippe_files(path)
     }
 }
 
@@ -192,6 +194,51 @@ function read_files(dirname) {
                 'name': "chan_" + String(i),
                 'vals': points
             }
+            //push to global array
+            final_arr.push(dict)
+            console.log('dict post process', dict)
+        })
+    }
+    setTimeout(function () {
+        load_all_graphs()
+    }, 800)
+}
+
+function read_philippe_files(dirname) {
+    // unfortunately, it seems this needs to be hardcoded
+    let files = [
+        '2326.csv', '2358.csv', '2796.csv', '3888.csv', '4485.csv',
+        '4805.csv', '4893.csv', '5174.csv', '5821.csv', '6181.csv',
+        '6225.csv', '6395.csv', '7130.csv', '7458.csv', '7613.csv',
+        '7695.csv', '8133.csv', '8588.csv', '8917.csv', '905.csv',
+        '97.csv'];
+    console.log(files);
+
+
+    for (let i = 0; i < files.length; i++) {
+        let cur_dirname = dirname + "/" + files[i];
+
+        d3.csv(cur_dirname).then(data => {
+
+            console.log('first data', data)
+
+            //make arrays for all columns we need
+            let name_arr = Array.from(data, d => d.id)
+            let data_arr = Array.from(data, d => parseFloat(d.value))
+            let x_arr = Array.from(data, d => parseInt(d.time))
+            let events_arr = Array.from(data, d => parseInt(d.event))
+
+            //map them to the array of dictionaries we want
+            let points = x_arr.map(function (e, i) {
+                if (!isNaN(e)) {
+                    return {'x': e, 'y': data_arr[i], 'event': events_arr[i]};
+                }
+            });
+            //complete dictionary
+            let dict = {
+                'name': "tsc_" + files[i].split(".csv")[0],
+                'vals': points
+            };
             //push to global array
             final_arr.push(dict)
             console.log('dict post process', dict)

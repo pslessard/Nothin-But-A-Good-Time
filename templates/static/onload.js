@@ -150,6 +150,8 @@ function load_local(num) {
     }
     else if (num === 2) {
         //load philippes data
+        let path = "templates/static/data/set_2";
+        read_philippe_files(path)
     }
 }
 
@@ -172,7 +174,34 @@ function read_files(dirname) {
         })
     }
     setTimeout(function () {
-        console.log("BRAIINNNNSSSSSSSS")
+        horizon_graph()
+        linechart()
+        add_ranges()
+
+    }, 2500)
+}
+
+function read_philippe_files(dirname) {
+    let fs = require('fs');
+    let files = fs.readdirSync('/assets/photos/');
+    console.log("FILESSS", files)
+    for (let i = 0; i < 16; i++) {
+        let cur_dirname = dirname + "/chan_" + String(i) + ".csv"
+        d3.csv(cur_dirname).then(data => {
+            let data_arr = Array.from(data, d => parseFloat(Object.values(d)[0]))
+            let x_arr = [...Array(data_arr.length).keys()];
+            let points = x_arr.map(function (e, i) {
+                return {'x': e, 'y': data_arr[i]};
+            });
+            let dict = {
+                'name': "chan_" + String(i) + ".csv",
+                'vals': points
+            }
+            final_arr.push(dict)
+            console.log(dict)
+        })
+    }
+    setTimeout(function () {
         horizon_graph()
         linechart()
         add_ranges()

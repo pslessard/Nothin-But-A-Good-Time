@@ -177,7 +177,10 @@ function horizon_graph(overlap = 5, step = 30) {
                         .duration(10)
                         .attr("x", x - 40)
                         .attr("y", 2 + (height_offset * (i + 1.01)))
-                        .text(data[i]['values'][arr_val]['y'].toFixed(3));
+                        .text((data[i]['values'][arr_val] !== undefined
+                            && !isNaN(data[i]['values'][arr_val]['y']))
+                            ? data[i]['values'][arr_val]['y'].toFixed(3)
+                            : "");
 
 
                     guideline
