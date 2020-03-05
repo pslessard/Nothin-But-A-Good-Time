@@ -1,12 +1,11 @@
+let opacity = 0.1;
 let linechart = () => {
-    let opacity = 0.1;
 
-    let margin = {top: 20, right: 20, bottom: 20, left: 20},
-        width = 900 - margin.left - margin.right,
+    let margin = {top: 20, right: 40, bottom: 20, left: 50},
+        width = window.innerWidth - margin.left - margin.right,
         height = 600 - margin.top - margin.bottom;
 
-    let svg = d3.select("body")
-        .append("svg")
+    let svg = d3.select("#line-chart")
         .attr("width", width)
         .attr("height", height)
         .style("mix-blend-mode", "hard-light")
@@ -14,7 +13,7 @@ let linechart = () => {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     let min = 100, max = -100;
-    let generateTS = (id="", startTime = 0) => {
+    let generateTS = (id = "", startTime = 0) => {
         let tempData = Array(256);
         tempData[0] = {"x": 0, "y": 0, "event": 0};
         for (let i = 1; i <= 256; i++) {
@@ -93,6 +92,7 @@ let linechart = () => {
     };
     let intervals = getHighlightIntervals(data);
 
+
     let xmax = d3.max(data, dt => {
         return d3.max(dt.vals, datum => {
             return datum.x;
@@ -123,16 +123,6 @@ let linechart = () => {
         .domain(y0)
         .range([height - margin.top - margin.bottom, 0]);
 
-    let highlights = svg.append("g").attr("pointer-events", "none").selectAll("rect")
-        .data(intervals)
-        .enter()
-        .append("rect")
-        .attr("y", 0)
-        .attr("x", d => x(d[0]))
-        .attr("width", d => (x(d[1]) - x(d[0])))
-        .attr("height", "100%")
-        .attr("fill", "aquamarine")
-        .attr("opacity", 0.5);
 
     let newData = [];
     data.forEach(d => {
@@ -152,27 +142,47 @@ let linechart = () => {
         //  console.log("mean", mean)
         //  console.log("stddev", stddev)
 
-        let datum = d.vals.map(pt => { return (pt["y"] - min) / (max - min) });
+        let datum = d.vals.map(pt => {
+            return (pt["y"] - min) / (max - min)
+        });
         newData.push(datum)
     });
 
     let idleTimeout, idleDelay = 350;
 
     let line = d3.line()
-        .x((d) => {return x(d["x"])})
-        .y((d) => {return y(d["y"])});
+        .x((d) => {
+            return x(d["x"])
+        })
+        .y((d) => {
+            return y(d["y"])
+        });
 
     let xAxis = svg.append("g")
         .attr("id", "xAxis")
         .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
+        .attr('class', 'axis')
         .call(d3.axisBottom(x));
 
     let yAxis = svg.append("g")
         .attr("id", "yAxis")
+        .attr('class', 'axis')
         .call(d3.axisLeft(y));
 
+    let highlights = svg.append("g").attr("pointer-events", "none").selectAll("rect")
+        .data(intervals)
+        .enter()
+        .append("rect")
+        .attr("class", "highlights")
+        .attr("y", 0)
+        .attr("x", d => x(d[0]))
+        .attr("width", d => (x(d[1]) - x(d[0])))
+        .attr("height", height - margin.bottom - margin.top)
+        .attr("fill", "#cbcbcb")
+        .attr("opacity", 0);
+
     let brush = d3.brush()
-        .extent( [ [0,0], [width,height] ] );
+        .extent([[0, 0], [width, height]]);
 
     let brushG = svg.append("g")
         .attr("class", "brush")
@@ -185,18 +195,24 @@ let linechart = () => {
         .attr("pointer-events", "none")
         .append("line");
 
+
     // console.log(svg)
     let paths = svg.append("g").selectAll("path")
         .data(data)
         .enter()
         .append("path")
         .attr('pointer-events', 'stroke')
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 2)
+        .attr("stroke", (d, i) => color_schemes.viridis(0))
+        .attr("stroke-width", 1)
         .attr("fill", "none")
-        .attr("d", d => {return line(d.vals) })
+        .attr("d", d => {
+            return line(d.vals)
+        })
         .attr("opacity", opacity)
-        .attr("class", d => {return d.name});
+        .attr("class", d => {
+            return d.name
+        });
+
 
     let tooltipG = svg.append("g").attr("pointer-events", "none");
     let tooltipRect = tooltipG
@@ -232,19 +248,20 @@ let linechart = () => {
         if (d.selected) {
             ts
                 .attr("opacity", 1)
-                .attr("stroke-width", 3);
+                .attr("stroke-width", 1.5);
         }
         else {
             ts
                 .attr("opacity", opacity)
-                .attr("stroke-width", 2);
+                .attr("stroke-width", 1);
         }
     };
 
+
     let mouseover = (d, i, nodes) => {
         d3.selectAll("." + d.name)
-            .attr("opacity", 1)
-            .attr("stroke-width", 3);
+            .attr("opacity", 0.8)
+            .attr("stroke-width", 1.5);
     };
 
     let mouseleave = (d, i, nodes) => {
@@ -252,7 +269,7 @@ let linechart = () => {
         if (!("selected" in d) || !d.selected) {
             d3.selectAll("." + d.name)
                 .attr("opacity", opacity)
-                .attr("stroke-width", 2);
+                .attr("stroke-width", 1);
         }
 
         line1.attr("opacity", 0);
@@ -271,23 +288,23 @@ let linechart = () => {
             .attr("x2", d => x(d.x))
             .attr("y1", d => y(d.y))
             .attr("y2", d => y(d.y))
-            .attr("stroke", "black")
+            .attr("stroke", "#494949")
             .attr("stroke-width", 1)
-            .attr("opacity", 1);
+            .attr("opacity", 0.5);
 
         line2.datum(closePoint)
             .attr("x1", d => x(d.x))
             .attr("x2", d => x(d.x))
             .attr("y1", d => y(min))
             .attr("y2", d => y(d.y))
-            .attr("stroke", "black")
+            .attr("stroke", "#494949")
             .attr("stroke-width", 1)
-            .attr("opacity", 1);
+            .attr("opacity", 0.5);
 
         tooltipRect
             .attr("x", mouse[0] - tooltipRect.attr("width") / 2)
             .attr("y", mouse[1] - tooltipRect.attr("height") - 10)
-            .attr("opacity", 0.7);
+            .attr("opacity", 0.5);
 
         tooltip
             .text(closePoint.x + ", " + closePoint.y)
@@ -307,7 +324,9 @@ let linechart = () => {
         let selection = d3.event.selection;
         // console.log(selection);
         if (!selection) {
-            if (!idleTimeout) return idleTimeout = setTimeout(() => {idleTimeout = null}, idleDelay);
+            if (!idleTimeout) return idleTimeout = setTimeout(() => {
+                idleTimeout = null
+            }, idleDelay);
             x.domain(x0);
             y.domain(y0);
         } else {
@@ -317,10 +336,16 @@ let linechart = () => {
         }
 
         line = d3.line()
-            .x((d) => {return x(d["x"])})
-            .y((d) => {return y(d["y"])});
+            .x((d) => {
+                return x(d["x"])
+            })
+            .y((d) => {
+                return y(d["y"])
+            });
         paths.transition().duration(500)
-            .attr("d", function(d) { return line(d.vals); });
+            .attr("d", function (d) {
+                return line(d.vals);
+            });
 
         xAxis.transition().duration(500).call(d3.axisBottom(x));
         yAxis.transition().duration(500).call(d3.axisLeft(y));
@@ -334,3 +359,47 @@ let linechart = () => {
 
     brush.on("end", zoom);
 };
+
+function add_options() {
+    let obj = document.getElementById('options');
+    if (obj.innerHTML === "") {
+        console.log("hereeee")
+        let events_checkbox = ' <div class="col-5 d-flex justify-content-center align-items-center">' +
+            // '<div class="col-1 p-0 d-flex align-items-center justify-content-right">' +
+            '<div class="col-7 d-flex text-center">' +
+                        '<input type="checkbox" class="form-check-input " id="events-check" onchange="add_remove_events(this)">' +
+            '<label class="form-check-label" for="events-check">Show/hide event highlights</label>' +
+            '</div></div>';
+        let step_range = '<div class="col-5 d-flex justify-content-center align-items-center">' +
+            // '<div class="col p-0 d-flex align-items-center text-center">' +
+            '<label for="opacity-range">Line Opacity</label>' +
+            // '</div><div class="col d-flex align-items-center">' +
+            '<input type="range" class="custom-range ml-2" min=0.1 max=0.8 step="0.1" id="opacity-range" onchange="redraw_line(this)"></div>'
+            // '</div>';
+        obj.innerHTML = events_checkbox + step_range
+    }
+}
+
+function add_remove_events(obj) {
+    if (!obj.checked) {
+        d3.selectAll(".highlights")
+            .transition()
+            .attr("opacity", 0)
+    } else {
+        d3.selectAll(".highlights")
+            .transition()
+            .attr("opacity", 0.3)
+    }
+}
+
+function redraw_line(obj) {
+    opacity = parseFloat(obj.value);
+    console.log('opacity is', opacity)
+    for (let el of final_arr){
+        d3.selectAll("." + el.name)
+        .attr("opacity", opacity)
+    }
+
+
+
+}

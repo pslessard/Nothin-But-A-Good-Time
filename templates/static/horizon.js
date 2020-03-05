@@ -4,7 +4,6 @@ function horizon_graph(overlap = 5, step = 30) {
     new Promise((resolve => {
         // console.log('final arr here')
         let prelim_data = [];
-        console.log('final arr', final_arr);
         final_arr.forEach(d => {
             let adict = {};
             for (let v of d.vals) {
@@ -12,7 +11,8 @@ function horizon_graph(overlap = 5, step = 30) {
                     prelim_data.push({
                         'name': d.name,
                         'x': v.x,
-                        'y': v.y
+                        'y': v.y,
+                        'event':v.event
                     })
                 }
             // }
@@ -22,21 +22,22 @@ function horizon_graph(overlap = 5, step = 30) {
             .sortValues((a, b) => a.x - b.x)
             .entries(prelim_data)
             .map(d => (d.sum = d3.sum(d.values, d => d.y), d))
-            .sort((a, b) => b.sum - a.sum);
-        console.log('this data right here', data);
+            // .sort((a, b) => b.sum - a.sum);
         resolve(data)
     })).then((data) => {
+        console.log('data here', data)
 
-        let color = i => d3['schemeBlues'][Math.max(3, overlap)][i + Math.max(0, 3 - overlap)]
+        // let color = i => d3['schemeBlues'][Math.max(3, overlap)][i + Math.max(0, 3 - overlap)]
+        var color = color_schemes.viridis
         let margin = ({top: 20, right: 20, bottom: 20, left: 50});
         let width = window.innerWidth - margin.left - margin.right;
         let height = data.length * (step + 1) + margin.top + margin.bottom;
 
-        console.log(data[0].values);
+        // console.log(data[0].values);
 
         const svg = d3.selectAll('#horizon-chart')
             .attr("viewBox", [0, 0, width, height])
-            .style("font", "10px sans-serif");
+            // .style("font", "10px sans-serif");
 
         let area = d3.area()
             .curve(d3.curveBasis)
@@ -59,6 +60,7 @@ function horizon_graph(overlap = 5, step = 30) {
 
         let xAxis = svg.append("g")
             .attr("transform", `translate(0,${margin.top})`)
+            .attr('class', 'axis')
             .call(d3.axisTop(x).ticks(width / 80).tickSizeOuter(0))
             .call(g => g.selectAll(".tick").filter(d => x(d) < margin.left || x(d) >= width - margin.right).remove())
             .call(g => g.select(".domain").remove())
@@ -77,6 +79,7 @@ function horizon_graph(overlap = 5, step = 30) {
                 return d.clip
             })
             .append("rect")
+            .attr("border-left-color", "#9f9f9f")
             .attr("width", width)
             .attr("height", step);
 
@@ -87,7 +90,8 @@ function horizon_graph(overlap = 5, step = 30) {
                 d.path = "apath" + gen_class(d.key);
                 return d.path
             })
-            .attr("d", d => {console.log('values hearererrereee', d.values); return area(d.values)});
+            .attr("d", d => area(d.values))
+            .attr('opacity', 0.7);
 
         g.append("g")
             .attr("clip-path", d => "url(#" + d.clip + ")")
@@ -99,9 +103,11 @@ function horizon_graph(overlap = 5, step = 30) {
             .attr("xlink:href", d => "#" + d.path);
 
         g.append("text")
-            .attr("x", 10)
+            .attr("x", 2)
             .attr("y", step / 2)
             .attr("dy", "0.35em")
+            .attr("opacity", 0.6)
+            .attr('color', '#747474')
             .text(d => d.key);
 
         // svg.append("g")
@@ -125,11 +131,12 @@ function horizon_graph(overlap = 5, step = 30) {
                 .attr('height', height - margin.top);
 
             for (let i = 0; i < data.length; i++) {
-                console.log(data[i]);
+                // console.log(data[i]);
                 texts.append("text")
                     .attr("x", 0)
                     .attr("y", 0)
                     .attr("id", "text_" + String(i))
+                    .attr('color', '#747474')
                     .attr("dy", ".35em")
             }
 
@@ -148,7 +155,7 @@ function horizon_graph(overlap = 5, step = 30) {
                 // var y = e.clientY - margin.top;
                 var x = e.pageX - $('#horizon-chart').offset().left;
                 var y = e.pageY - $('#horizon-chart').offset().top;
-                console.log('x y', x, y)
+                // console.log('x y', x, y)
 
                 let height_offset = step + 1
                 // (cur_target.getBoundingClientRect().height - margin.top) / data.length;

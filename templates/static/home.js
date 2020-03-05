@@ -1,3 +1,43 @@
+let color_schemes= {
+        'blues': d3.scaleSequential()
+        .domain([0, 4])
+        .interpolator(d3.interpolateRgb("#b4c6e7", "#093077")),
+    'pinks': d3.scaleSequential()
+        .domain([0, 5])
+        .interpolator(d3.interpolateViridis),
+    'viridis': d3.scaleSequential()
+        .domain([0, 5])
+        .interpolator(d3.interpolateViridis)
+
+}
+
+
+
+function load_all_graphs() {
+    let line_div = document.getElementById('line-div')
+    let horizon_div = document.getElementById('horizon-div')
+    line_div.classList.remove = 'closed';
+    line_div.style.position = 'relative'
+    line_div.style.visibility = 'visible'
+    horizon_div.classList.remove = 'closed';
+        horizon_div.style.position = 'relative'
+    horizon_div.style.visibility = 'visible'
+            // document.getElementById('-container').classList.remove = 'closed';
+
+
+    add_options();
+    let op = document.getElementById("opacity-range").value;
+    linechart(parseInt(op));
+    add_ranges();
+    let o = document.getElementById("overlap-range").value;
+    let s = document.getElementById("step-range").value;
+    console.log("o s", o, s);
+    horizon_graph(parseInt(o), parseInt(s))
+
+    // ridgeline_chart()
+}
+
+
 window.onload = function () {
     load_background(3)
     let all_imgs = document.getElementsByClassName('thumbnails')
@@ -28,15 +68,11 @@ window.onload = function () {
         });
 
     }
-
-    // window.addEventListener("hashchange", function () {
-    //     window.scrollTo(window.scrollX, window.scrollY - 1000);
-    // });
 }
 
-let colors = ["#b55774", "#ffb862", "#179ea8"]
 
 function load_background(num) {
+    let colors = ["#b55774", "#ffb862", "#179ea8"];
     var lineGenerator = d3.line()
         .curve(d3.curveCardinal);
 

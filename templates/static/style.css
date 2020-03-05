@@ -8,6 +8,18 @@
 /*top: -60px;*/
 /*}*/
 
+.closed {
+    visibility: hidden;
+    position: absolute;
+    top:0;
+    left:0
+}
+
+.open {
+    visibility: visible;
+    position: relative;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -16,7 +28,7 @@ html {
     position: absolute;
     top: 0;
     left: 0;
-    height: 300vh;
+    max-height: 100vh;
 }
 
 .headertext {
@@ -55,7 +67,23 @@ html {
     font-size: 1.2em;
 }
 
-.chart {
-    height: 60vh;
-    /*width: 100%*/
+/*.chart {*/
+    /*font-family: "Microsoft Tai Le", sans-serif;*/
+    /*font-size: 0.7em;*/
+    /*color: #494949;*/
+/*}*/
+
+.axis {
+    font-family: "Microsoft Tai Le", sans-serif;
+    font-size: 0.7em;
+    color: #494949;
+    /*fill: #494949;*/
+}
+
+.axis path {
+    stroke: #b4b4b4;
+}
+
+.axis line {
+    stroke: #b4b4b4;
 }

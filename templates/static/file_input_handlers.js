@@ -2,22 +2,7 @@
 
 let final_arr = []
 
-
-function get_data() {
-    console.log('heres all the data', final_arr)
-    let o = document.getElementById("overlap-range").value
-    let s = document.getElementById("step-range").value
-    console.log("o s", o, s)
-    horizon_graph(parseInt(o), parseInt(s))
-}
-
-function load_all_graphs() {
-    add_ranges();
-    let o = document.getElementById("overlap-range").value
-    let s = document.getElementById("step-range").value
-    console.log("o s", o, s)
-    horizon_graph(parseInt(o), parseInt(s))
-}
+//
 
 //---------------------------USER UPLOADS HERE---------------------------------
 //gets called when new upload happens
@@ -73,7 +58,7 @@ function read_csv(event, filename) {
         let split = el.split(',');
         let x = parseFloat(split[1]);
         let y = parseFloat(split[2]);
-        let event = parseFloat(split[3])
+        let event = parseInt(split[3])
         if (!isNaN(x) && !isNaN(y)) {
             vals.push({
                 'x': x,
@@ -157,6 +142,15 @@ function error_handler(evt) {
 // }
 
 
+// function get_data() {
+//     console.log('heres all the data', final_arr)
+//     let o = document.getElementById("overlap-range").value
+//     let s = document.getElementById("step-range").value
+//     console.log("o s", o, s)
+//     horizon_graph(parseInt(o), parseInt(s))
+// }
+
+//congratulations on overcoming the Comment Void
 //---------------------------------------------------------------------------------------
 //-----------------------------------OUR FILES HERE---------------------------------------
 function load_local(num) {
