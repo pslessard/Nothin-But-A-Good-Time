@@ -123,6 +123,16 @@ let linechart = () => {
         .domain(y0)
         .range([height - margin.top - margin.bottom, 0]);
 
+    // let highlights = svg.append("g").attr("pointer-events", "none").selectAll("rect")
+    //     .data(intervals)
+    //     .enter()
+    //     .append("rect")
+    //     .attr("y", 0)
+    //     .attr("x", d => x(d[0]))
+    //     .attr("width", d => (x(d[1]) - x(d[0])))
+    //     .attr("height", "100%")
+    //     .attr("fill", "aquamarine")
+    //     .attr("opacity", 0.5);
 
     let newData = [];
     data.forEach(d => {
@@ -142,32 +152,16 @@ let linechart = () => {
         //  console.log("mean", mean)
         //  console.log("stddev", stddev)
 
-        let datum = d.vals.map(pt => {
-            return (pt["y"] - min) / (max - min)
-        });
+        let datum = d.vals.map(pt => { return (pt["y"] - min) / (max - min) });
         newData.push(datum)
     });
 
     let idleTimeout, idleDelay = 350;
 
     let line = d3.line()
-        .x((d) => {
-            return x(d["x"])
-        })
-        .y((d) => {
-            return y(d["y"])
-        });
-
-    let xAxis = svg.append("g")
-        .attr("id", "xAxis")
-        .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
-        .attr('class', 'axis')
-        .call(d3.axisBottom(x));
-
-    let yAxis = svg.append("g")
-        .attr("id", "yAxis")
-        .attr('class', 'axis')
-        .call(d3.axisLeft(y));
+        .defined(d => !isNaN(d.y))
+        .x((d) => {return x(d.x)})
+        .y((d) => {return y(d.y)});
 
     let highlights = svg.append("g").attr("pointer-events", "none").selectAll("rect")
         .data(intervals)
@@ -212,6 +206,42 @@ let linechart = () => {
         .attr("class", d => {
             return d.name
         });
+
+
+    let clip1 = svg.append("g")
+        .append("rect")
+        .attr("x", -margin.left)
+        .attr("y", -margin.top)
+        .attr("width", margin.left)
+        .attr("height", "200%")
+        .attr("fill", "white");
+
+    let clip2 = svg.append("g")
+        .append("rect")
+        .attr("x", -margin.left)
+        .attr("y", y(min))
+        .attr("width", "calc(100% + "+margin.left+")")
+        .attr("height", "100%")
+        .attr("fill", "white");
+
+    let clip3 = svg.append("g")
+        .append("rect")
+        .attr("x", x(xmax))
+        .attr("y", -margin.top)
+        .attr("width", "100%")
+        .attr("height", "200%")
+        .attr("fill", "white");
+
+    let xAxis = svg.append("g")
+        .attr("id", "xAxis")
+        .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
+        .attr('class', 'axis')
+        .call(d3.axisBottom(x));
+
+    let yAxis = svg.append("g")
+        .attr("id", "yAxis")
+        .attr('class', 'axis')
+        .call(d3.axisLeft(y));
 
 
     let tooltipG = svg.append("g").attr("pointer-events", "none");
