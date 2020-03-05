@@ -162,7 +162,7 @@ function load_local(num) {
     }
     else if (num === 2) {
         //load philippes data
-        let path = "templates/static/data/set_2";
+        let path = "templates/static/data/set_3";
         read_philippe_files(path)
     }
 }
@@ -206,12 +206,21 @@ function read_files(dirname) {
 
 function read_philippe_files(dirname) {
     // unfortunately, it seems this needs to be hardcoded
-    let files = [
-        '2326.csv', '2358.csv', '2796.csv', '3888.csv', '4485.csv',
-        '4805.csv', '4893.csv', '5174.csv', '5821.csv', '6181.csv',
-        '6225.csv', '6395.csv', '7130.csv', '7458.csv', '7613.csv',
-        '7695.csv', '8133.csv', '8588.csv', '8917.csv', '905.csv',
-        '97.csv'];
+    let files = (dirname === "set_2")
+        ? [
+            '2326.csv', '2358.csv', '2796.csv', '3888.csv', '4485.csv',
+            '4805.csv', '4893.csv', '5174.csv', '5821.csv', '6181.csv',
+            '6225.csv', '6395.csv', '7130.csv', '7458.csv', '7613.csv',
+            '7695.csv', '8133.csv', '8588.csv', '8917.csv', '905.csv',
+            '97.csv'
+        ]
+        : [
+            '1722.csv', '2270.csv', '3041.csv', '3082.csv', '4786.csv', '4873.csv',
+         '5045.csv', '5662.csv', '6605.csv', '7719.csv', '8624.csv', '1936.csv',
+         '2401.csv', '307.csv', '4330.csv', '4824.csv', '5042.csv', '5404.csv',
+         '6363.csv', '7676.csv', '7884.csv', 'query_809.csv'
+        ];
+
     console.log(files);
 
 

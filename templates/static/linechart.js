@@ -71,10 +71,10 @@ let linechart = () => {
             let inInterval = false;
             let intervalStart = -1;
             for (let i = 0; i < temp.vals.length; i++) {
-                if (temp.vals[i].event === 1 && !inInterval) {
+                if (temp.vals[i].event === 1 && !isNaN(temp.vals[i].y) && !inInterval) {
                     intervalStart = temp.vals[i].x;
                     inInterval = true;
-                } else if (inInterval && temp.vals[i].event === 0) {
+                } else if (inInterval && (temp.vals[i].event === 0 || isNaN(temp.vals[i].y))) {
                     intervals.push([intervalStart, temp.vals[i].x]);
                     intervalStart = -1;
                     inInterval = false;
