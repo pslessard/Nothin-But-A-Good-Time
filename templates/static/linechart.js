@@ -196,7 +196,7 @@ let linechart = () => {
         .enter()
         .append("path")
         .attr('pointer-events', 'stroke')
-        .attr("stroke", (d, i) => color_schemes.viridis(0))
+        .attr("stroke", (d, i) => color_schemes.purples(2))
         .attr("stroke-width", 1)
         .attr("fill", "none")
         .attr("d", d => {
@@ -337,7 +337,7 @@ let linechart = () => {
             .attr("opacity", 0.5);
 
         tooltip
-            .text(closePoint.x + ", " + closePoint.y)
+            .text(nodes[i].classList[0]+ ": " + closePoint.x + ", " + closePoint.y)
             .attr("transform", "translate(" +
                 (mouse[0] - tooltipRect.attr("width") / 2) + "," +
                 (mouse[1] - tooltipRect.attr("height") - 10) + ")")

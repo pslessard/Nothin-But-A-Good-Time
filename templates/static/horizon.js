@@ -27,8 +27,8 @@ function horizon_graph(overlap = 5, step = 30) {
     })).then((data) => {
         console.log('data here', data)
 
-        // let color = i => d3['schemeBlues'][Math.max(3, overlap)][i + Math.max(0, 3 - overlap)]
-        var color = color_schemes.viridis
+        // let color = i => d3['schemeRdPu'][Math.max(3, overlap)][i + Math.max(0, 3 - overlap)]
+        var color = color_schemes.blues
         let margin = ({top: 20, right: 20, bottom: 20, left: 50});
         let width = window.innerWidth - margin.left - margin.right;
         let height = data.length * (step + 1) + margin.top + margin.bottom;
@@ -91,7 +91,7 @@ function horizon_graph(overlap = 5, step = 30) {
                 return d.path
             })
             .attr("d", d => area(d.values))
-            .attr('opacity', 0.7);
+            .attr('opacity', 0.8);
 
         g.append("g")
             .attr("clip-path", d => "url(#" + d.clip + ")")

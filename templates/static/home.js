@@ -2,9 +2,9 @@ let color_schemes= {
         'blues': d3.scaleSequential()
         .domain([0, 4])
         .interpolator(d3.interpolateRgb("#b4c6e7", "#093077")),
-    'pinks': d3.scaleSequential()
+    'purples': d3.scaleSequential()
         .domain([0, 5])
-        .interpolator(d3.interpolateViridis),
+        .interpolator(d3.interpolateRgb("#ccc6ff","#450f4e")),
     'viridis': d3.scaleSequential()
         .domain([0, 5])
         .interpolator(d3.interpolateViridis)
@@ -39,6 +39,7 @@ function load_all_graphs() {
 
 
 window.onload = function () {
+    AOS.init();
     load_background(3)
     let all_imgs = document.getElementsByClassName('thumbnails')
     for(let i=0; i<all_imgs.length; i++){
