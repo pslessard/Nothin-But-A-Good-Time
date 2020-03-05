@@ -172,8 +172,11 @@ function read_files(dirname) {
         })
     }
     setTimeout(function () {
-        horizon_graph()
-        add_ranges()
+        add_ranges();
+        let o = document.getElementById("overlap-range").value
+        let s = document.getElementById("step-range").value
+        console.log("o s", o, s)
+        horizon_graph(parseInt(o), parseInt(s))
 
     }, 2500)
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-function horizon_graph(overlap=5, step=30) {
+function horizon_graph(overlap = 5, step = 30) {
     new Promise((resolve => {
         // console.log('final arr here')
         let prelim_data = [];
@@ -29,7 +29,7 @@ function horizon_graph(overlap=5, step=30) {
 
         let color = i => d3['schemeBlues'][Math.max(3, overlap)][i + Math.max(0, 3 - overlap)]
         let margin = ({top: 20, right: 20, bottom: 20, left: 50});
-        let width = window.innerWidth*0.7 - margin.left - margin.right;
+        let width = window.innerWidth - margin.left - margin.right;
         let height = data.length * (step + 1) + margin.top + margin.bottom;
 
         console.log(data[0].values);
@@ -99,7 +99,7 @@ function horizon_graph(overlap=5, step=30) {
             .attr("xlink:href", d => "#" + d.path);
 
         g.append("text")
-            .attr("x", 4)
+            .attr("x", 10)
             .attr("y", step / 2)
             .attr("dy", "0.35em")
             .text(d => d.key);
@@ -144,36 +144,38 @@ function horizon_graph(overlap=5, step=30) {
             svg_obj.onmousemove = function (e) {
                 var cur_target = e.currentTarget;
 
-                var x = e.offsetX - margin.left - margin.right;
-                var y = e.clientY - margin.top;
+                // var x = e.clientX   ;
+                // var y = e.clientY - margin.top;
+                var x = e.pageX - $('#horizon-chart').offset().left;
+                var y = e.pageY - $('#horizon-chart').offset().top;
                 console.log('x y', x, y)
 
-                let height_offset =step+1
-                // (cur_target.getBoundingClientRect().height - margin.top) / data.length;
+                let height_offset = step+1
+                    // (cur_target.getBoundingClientRect().height - margin.top) / data.length;
+                //step + 1
                 let strip_no = Math.floor(y / height_offset);
 
-                // console.log((cur_target.getBoundingClientRect().height - margin.top) / final_arr.length);
-                // console.log('x', x);
-                // console.log('y', y);
-                // console.log('strip', strip_no)
+
+                let x_scale =data[0].values.length/(window.innerWidth-100-margin.right)
+                let arr_val = Math.floor(x*x_scale)
+                let s = window.innerWidth/(window.innerWidth-margin.left)
 
                 for (let i = 0; i < data.length; i++) {
-                    if(x > (window.innerWidth*0.7) + margin.left){
-                        x = (window.innerWidth*0.7) + margin.left
-                    }
+
+                    if(x<0){x=0}
                     d3.selectAll("#text_" + String(i))
                         .transition()
                         .duration(10)
-                        .attr("x", x - 50)
-                        .attr("y", (height_offset * (i + 1)))
-                        .text(data[i]['values'][x]['y'].toFixed(3));
+                        .attr("x", x - 40)
+                        .attr("y", 2+(height_offset * (i + 1.01)))
+                        .text(data[i]['values'][arr_val]['y'].toFixed(3));
 
 
                     guideline
-                        .attr("x1", x)
-                        .attr("x2", x)
+                        .attr("x1", x*s)
+                        .attr("x2", x*s)
                         .attr('y1', margin.top)
-                        .attr('y2', height)
+                        .attr('y2', height-margin.top)
 
                 }
             }
@@ -185,17 +187,17 @@ function horizon_graph(overlap=5, step=30) {
 function add_ranges() {
     let thediv = document.getElementById("ranges");
     if (thediv.innerHTML === "") {
-        let overlap_range = ' <div class="row d-flex justify-content-right">' +
+        let overlap_range = ' <div class="col-4 d-flex justify-content-center">' +
             '<label for="overlap-range">Level of overlap</label>' +
-            '<input type="range" class="custom-range" min=1 max=7 step="1" id="overlap-range" onchange="redraw()">'+
+            '<input type="range" class="custom-range ml-2" min=1 max=7 step="1" id="overlap-range" onchange="redraw()">' +
             '</div>'
-        let step_range = '<div class="row d-flex justify-content-right"><label for="step-range">Width of section</label>' +
-            '<input type="range" class="custom-range" min=15 max=60 step="5" id="step-range" onchange="redraw()"></div>';
+        let step_range = '<div class="col-4 d-flex justify-content-center"><label for="step-range">Width of section</label>' +
+            '<input type="range" class="custom-range ml-2" min=15 max=60 step="5" id="step-range" onchange="redraw()"></div>';
         thediv.innerHTML = overlap_range + step_range
     }
 }
 
-function redraw(){
+function redraw() {
     document.getElementById("horizon-chart").innerHTML = "";
     let new_overlap = parseInt(document.getElementById("overlap-range").value);
     let new_step = parseInt(document.getElementById("step-range").value);

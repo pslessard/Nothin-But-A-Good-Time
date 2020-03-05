@@ -1,15 +1,15 @@
 /*body {*/
-    /*background-color: #efefef;*/
+/*background-color: #efefef;*/
 /*}*/
 
 /*a {*/
-  /*position: absolute;*/
-  /*left: 0px;*/
-  /*top: -60px;*/
+/*position: absolute;*/
+/*left: 0px;*/
+/*top: -60px;*/
 /*}*/
 
 html {
-	scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 .home-container {
@@ -23,10 +23,8 @@ html {
     color: whitesmoke;
     font-family: 'Microsoft Tai Le', sans-serif;
     letter-spacing: 2px;
-  -webkit-text-stroke: 1px black;
+    -webkit-text-stroke: 1px black;
 }
-
-
 
 #homebanner {
     height: 25vh;
@@ -44,8 +42,17 @@ html {
 }
 
 .thumbnails {
-    width: 20vw;
-    height: 30vh;
+    width: 100% !important;
+    height: 30vh !important;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFFFFF;
+    font-size: 1.2em;
 }
 
 .chart {
