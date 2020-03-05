@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Nothin But A Good Time</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -19,9 +18,11 @@
     <link rel="stylesheet" href="templates/static/style.css">
     <script src="templates/static/home.js"></script>
 
-    <script src="templates/static/onload.js"></script>
+    <script src="templates/static/file_input_handlers.js"></script>
     <script src="templates/static/horizon.js"></script>
     <script src="templates/static/linechart.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!--<script src="templates/static/small_multiples.js"></script>-->
 </head>
 <body>
@@ -55,7 +56,7 @@
         <div class="col-4 d-flex align-items-center justify-content-center">
             <div class="custom-file">
                 <input type="file" class="custom-file-input white" id="dataset-upload-input" accept=".csv, .json"
-                       aria-describedby="inputGroupFileAddon01" onchange="(async()=>{await new_upload_temp(this)})()"
+                       aria-describedby="inputGroupFileAddon01" onchange="(async()=>{await new_upload(this)})()"
                        multiple>
                 <label class="custom-file-label" for="dataset-upload-input" onchange="new_upload_temp(this)">Upload your
                     own data</label>
@@ -78,52 +79,55 @@
             <h4>Step 2: <br/> Pick a visualization</h4>
         </div>
         <div class="col text-left p-0">
-
-            <a href="#line-div"><img src="resources/site-imgs/line-thumb.png"
-                                     class="thumbnails rounded mx-2 img-thumbnail"
-                                     alt="..."></a>
-            <a href="#horizon-div"><img src="resources/site-imgs/horizon-thumb.png"
-                                        class="thumbnails rounded mr-2 img-thumbnail"
-                                        alt="..."></a>
-            <a href="#matrix-div"><img src="resources/site-imgs/horizon-thumb.png"
-                                       class="thumbnails rounded mx-2 img-thumbnail"
-                                       alt="..."></a>
-        </div>
-        <div class="row w-100">
-            <hr class="my-4">
-        </div>
-    </div>
-    <div id="line-div" class="row w-100 d-flex align-items-center justify-content-center text-center mt-5">
-        <!--<hr class="my-5">-->
-        <div class="row w-100 d-flex align-items-center justify-content-center text-center">
-            <h4 class="text-center">Line Chart and Density Plot</h4></div>
-        <div class="row d-flex align-items-center justify-content-left">
-            <div class="col-11 d-flex justify-content-left p-0">
-                <svg id="line-chart" class="chart"></svg>
+            <div class="row w-100 d-flex align-items-center justify-content-left">
+                <div class="col-4 m-0 p-0">
+                    <a href="#line-div"><img src="resources/site-imgs/line-thumb.png"
+                                             class="thumbnails rounded pl-4"
+                                             alt="..."></a>
+                    </div>
+                        <div class="col-4 m-0 p-0">
+                            <a href="#horizon-div"><img src="resources/site-imgs/horizon-thumb.png"
+                                                        class="thumbnails rounded"
+                                                        alt="..."></a></div>
+                        <div class="col-4 m-0 p-0">
+                            <a href="#matrix-div"><img src="resources/site-imgs/horizon-thumb.png"
+                                                       class="thumbnails rounded "
+                                                       alt="..."></a></div>
+                    </div>
+                </div>
+                <div class="row w-100">
+                    <hr class="my-4">
+                </div>
             </div>
-            <div class="col-1">
-        </div>
-        </div>
-    </div>
-    <div id="horizon-div" class="row w-100 d-flex align-items-center justify-content-center text-center">
-        <div class="row w-100 d-flex justify-content-center text-center">
-            <h4 class="text-center">Horizon Chart and Small Multiples</h4>
-        </div>
-        <div class="row d-flex align-items-center justify-content-left">
-            <div class="col-11 d-flex justify-content-left p-0">
-                <svg id="horizon-chart" class="chart"></svg>
+            <div id="line-div" class="row w-100 d-flex align-items-center justify-content-center text-center mt-5">
+                <!--<hr class="my-5">-->
+                <div class="row w-100 d-flex align-items-center justify-content-center text-center">
+                    <h4 class="text-center">Line Chart and Density Plot</h4></div>
+                <div class="row d-flex align-items-center justify-content-left">
+                    <div class="col-11 d-flex justify-content-left p-0">
+                        <svg id="line-chart" class="chart ml-3"></svg>
+                    </div>
+                </div>
             </div>
-            <div class="col-1">
-            <div id="ranges"></div>
+            <div id="horizon-div" class="row w-100 d-flex align-items-center text-center my-4">
+                <div class="row w-100 d-flex justify-content-center text-center">
+                    <h4 class="text-center">Horizon Chart and Small Multiples</h4>
+                </div>
+                <div class="row w-100 d-flex align-items-center justify-content-left">
+                    <div class="row w-100 d-flex align-items-center justify-content-center my-3"
+                         style="min-height: 50px"
+                         id="ranges"></div>
+                    <div class="row w-100">
+                        <svg id="horizon-chart" style="width: 100vw; margin-left: 100px"></svg>
+                    </div>
+                </div>
+            </div>
+            <div id="matrix-div" class="row w-100 d-flex align-items-center justify-content-center text-center">
+                <div class="row w-100 d-flex align-items-center justify-content-center text-center">
+                    <h4 class="text-center">Density Matrix</h4></div>
+                <svg id="matrix-chart" class="chart"></svg>
+            </div>
         </div>
-        </div>
-    </div>
-    <div id="matrix-div" class="row w-100 d-flex align-items-center justify-content-center text-center">
-        <div class="row w-100 d-flex align-items-center justify-content-center text-center">
-            <h4 class="text-center">Density Matrix</h4></div>
-        <svg id="matrix-chart" class="chart"></svg>
-    </div>
-</div>
 
 
 </body>

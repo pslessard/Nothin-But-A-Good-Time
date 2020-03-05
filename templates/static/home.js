@@ -1,5 +1,34 @@
 window.onload = function () {
     load_background(3)
+    let all_imgs = document.getElementsByClassName('thumbnails')
+    for(let i=0; i<all_imgs.length; i++){
+        let img = all_imgs[i]
+        img.addEventListener("mouseover", function(e){
+            img.style.filter = "brightness(50%)"
+            let text = document.createElement("DIV")
+            text.className = "centered"
+            text.id = 'text_'+String(i)
+            switch (i) {
+                case 0:
+                    text.innerText = "Line Chart";
+                    break;
+                case 1:
+                    text.innerText = "Horizon Chart";
+                    break;
+                case 2:
+                    text.innerText = "Density Matrix";
+                    break;
+            }
+            img.parentElement.append(text)
+
+        });
+        img.addEventListener("mouseout", function(e){
+            img.style.filter = "brightness(100%)"
+            document.getElementById("text_"+String(i)).remove()
+        });
+
+    }
+
     // window.addEventListener("hashchange", function () {
     //     window.scrollTo(window.scrollX, window.scrollY - 1000);
     // });
@@ -22,7 +51,7 @@ function load_background(num) {
         let points = arr_x.map(function (e, i) {
             return [e, arr_y[i]];
         });
-        console.log(points)
+        // console.log(points)
 
         let line = svg.append("path")
             .attr("class", "line")
@@ -44,6 +73,5 @@ function load_background(num) {
             .delay(200 * (i + 1))
             .duration(4000)
             .attr("stroke-dashoffset", 0);
-
     }
 }
