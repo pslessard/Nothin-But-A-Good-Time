@@ -2,11 +2,10 @@ let linechart = () => {
     let opacity = 0.1;
 
     let margin = {top: 20, right: 20, bottom: 20, left: 20},
-        width = 900 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
+        width = 920 - margin.left - margin.right,
+        height = 492 - margin.top - margin.bottom;
 
-    let svg = d3.select("body")
-        .append("svg")
+    let svg = d3.select("#line-chart")
         .attr("width", width)
         .attr("height", height)
         .style("mix-blend-mode", "hard-light")
@@ -159,17 +158,9 @@ let linechart = () => {
     let idleTimeout, idleDelay = 350;
 
     let line = d3.line()
-        .x((d) => {return x(d["x"])})
-        .y((d) => {return y(d["y"])});
-
-    let xAxis = svg.append("g")
-        .attr("id", "xAxis")
-        .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
-        .call(d3.axisBottom(x));
-
-    let yAxis = svg.append("g")
-        .attr("id", "yAxis")
-        .call(d3.axisLeft(y));
+        .defined(d => !isNaN(d.y))
+        .x((d) => {return x(d.x)})
+        .y((d) => {return y(d.y)});
 
     let brush = d3.brush()
         .extent( [ [0,0], [width,height] ] );
@@ -197,6 +188,39 @@ let linechart = () => {
         .attr("d", d => {return line(d.vals) })
         .attr("opacity", opacity)
         .attr("class", d => {return d.name});
+
+    let clip1 = svg.append("g")
+        .append("rect")
+        .attr("x", -margin.left)
+        .attr("y", -margin.top)
+        .attr("width", margin.left)
+        .attr("height", "200%")
+        .attr("fill", "white");
+
+    let clip2 = svg.append("g")
+        .append("rect")
+        .attr("x", -margin.left)
+        .attr("y", y(min))
+        .attr("width", "calc(100% + "+margin.left+")")
+        .attr("height", "100%")
+        .attr("fill", "white");
+
+    let clip3 = svg.append("g")
+        .append("rect")
+        .attr("x", x(xmax))
+        .attr("y", -margin.top)
+        .attr("width", "100%")
+        .attr("height", "200%")
+        .attr("fill", "white");
+
+    let xAxis = svg.append("g")
+        .attr("id", "xAxis")
+        .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
+        .call(d3.axisBottom(x));
+
+    let yAxis = svg.append("g")
+        .attr("id", "yAxis")
+        .call(d3.axisLeft(y));
 
     let tooltipG = svg.append("g").attr("pointer-events", "none");
     let tooltipRect = tooltipG

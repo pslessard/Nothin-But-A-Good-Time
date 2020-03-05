@@ -173,7 +173,9 @@ function read_files(dirname) {
         })
     }
     setTimeout(function () {
+        console.log("BRAIINNNNSSSSSSSS")
         horizon_graph()
+        linechart()
 
     }, 2500)
 }
