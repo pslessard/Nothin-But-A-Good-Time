@@ -48,7 +48,7 @@
             <hr class="my-4">
         </div>
     </div>
-    <div class="input-group row d-flex align-items-center justify-content-left mt-4 ml-5">
+    <div class="input-group row w-100 d-flex align-items-center justify-content-left mt-4 p-0">
         <div class="col-3 text-center">
             <h4>Step 1: <br/>Pick your dataset</h4>
         </div>
@@ -73,21 +73,21 @@
             </div>
         </div>
     </div>
-    <div class="row w-100 d-flex align-items-center justify-content-left mt-4 ml-5">
+    <div class="row w-100 d-flex align-items-center justify-content-left p-0 mt-4 ">
         <div class="col-3 text-center">
             <h4>Step 2: <br/> Pick a visualization</h4>
         </div>
-        <div class="col text-left">
+        <div class="col text-left p-0">
 
             <a href="#line-div"><img src="resources/site-imgs/line-thumb.png"
-                                          class="thumbnails rounded mx-2 img-thumbnail"
-                                          alt="..."></a>
+                                     class="thumbnails rounded mx-2 img-thumbnail"
+                                     alt="..."></a>
             <a href="#horizon-div"><img src="resources/site-imgs/horizon-thumb.png"
-                                       class="thumbnails rounded mr-2 img-thumbnail"
-                                       alt="..."></a>
+                                        class="thumbnails rounded mr-2 img-thumbnail"
+                                        alt="..."></a>
             <a href="#matrix-div"><img src="resources/site-imgs/horizon-thumb.png"
-                                         class="thumbnails rounded mx-2 img-thumbnail"
-                                         alt="..."></a>
+                                       class="thumbnails rounded mx-2 img-thumbnail"
+                                       alt="..."></a>
         </div>
         <div class="row w-100">
             <hr class="my-4">
@@ -97,17 +97,25 @@
         <!--<hr class="my-5">-->
         <div class="row w-100 d-flex align-items-center justify-content-center text-center">
             <h4 class="text-center">Line Chart and Density Plot</h4></div>
-        <svg id="line-chart" class="chart"></svg>
+        <div class="row d-flex align-items-center justify-content-left">
+            <div class="col-11 d-flex justify-content-left p-0">
+                <svg id="line-chart" class="chart"></svg>
+            </div>
+            <div class="col-1">
+        </div>
+        </div>
     </div>
     <div id="horizon-div" class="row w-100 d-flex align-items-center justify-content-center text-center">
         <div class="row w-100 d-flex justify-content-center text-center">
             <h4 class="text-center">Horizon Chart and Small Multiples</h4>
         </div>
-        <div class="row w-100 d-flex align-items-center justify-content-left">
-            <svg id="horizon-chart" class="chart m-0"></svg>
-        </div>
-        <div class="row">
+        <div class="row d-flex align-items-center justify-content-left">
+            <div class="col-11 d-flex justify-content-left p-0">
+                <svg id="horizon-chart" class="chart"></svg>
+            </div>
+            <div class="col-1">
             <div id="ranges"></div>
+        </div>
         </div>
     </div>
     <div id="matrix-div" class="row w-100 d-flex align-items-center justify-content-center text-center">

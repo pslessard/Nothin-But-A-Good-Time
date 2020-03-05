@@ -134,7 +134,6 @@ function post_process_data(data_dict_arr, name) {
 
 function get_data() {
     console.log('heres all the data', final_arr)
-    add_ranges()
     let o = document.getElementById("overlap-range").value
     let s = document.getElementById("step-range").value
     console.log("o s", o, s)
@@ -176,6 +175,7 @@ function read_files(dirname) {
         console.log("BRAIINNNNSSSSSSSS")
         horizon_graph()
         linechart()
+        add_ranges()
 
     }, 2500)
 }
