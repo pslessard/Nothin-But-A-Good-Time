@@ -32,21 +32,23 @@ html {
 }
 
 .headertext {
-    color: whitesmoke;
+    color: #dbdbdb;
     font-family: 'Microsoft Tai Le', sans-serif;
     letter-spacing: 2px;
-    -webkit-text-stroke: 1px black;
+    stroke: black;
+    stroke-width: 2px;
+    /*-webkit-text-stroke: 1px black;*/
 }
 
 #homebanner {
-    height: 25vh;
+    height: 20vh;
     z-index: 10;
 }
 
 #background-viz {
     background-color: #080e21;
     position: absolute;
-    height: 25vh;
+    height: 20vh;
     width: 100%;
     top: 0;
     left: 0;
@@ -55,7 +57,7 @@ html {
 
 .thumbnails {
     width: 100% !important;
-    height: 30vh !important;
+    height: 25vh !important;
 }
 
 .centered {
@@ -67,11 +69,13 @@ html {
     font-size: 1.2em;
 }
 
-/*.chart {*/
-    /*font-family: "Microsoft Tai Le", sans-serif;*/
-    /*font-size: 0.7em;*/
-    /*color: #494949;*/
-/*}*/
+.link {
+    color: #787878;
+}
+
+.link:hover {
+    color: #8d8d8d;
+}
 
 .axis {
     font-family: "Microsoft Tai Le", sans-serif;

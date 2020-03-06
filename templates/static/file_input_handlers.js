@@ -7,6 +7,7 @@ let final_arr = []
 //---------------------------USER UPLOADS HERE---------------------------------
 //gets called when new upload happens
 async function new_upload(obj) {
+    final_arr = []
 
     console.log('started new upload');
 
@@ -154,7 +155,10 @@ function error_handler(evt) {
 //---------------------------------------------------------------------------------------
 //-----------------------------------OUR FILES HERE---------------------------------------
 function load_local(num) {
+    final_arr = []
+    console.log('onchange called')
     if (num === 1) {
+        console.log('petras data')
         //load petras data
         let path = "templates/static/data/set_1";
         read_files(path)
@@ -162,6 +166,7 @@ function load_local(num) {
     }
     else if (num === 2) {
         //load philippes data
+        console.log('philippes data')
         let path = "templates/static/data/set_3";
         read_philippe_files(path)
     }
@@ -169,7 +174,6 @@ function load_local(num) {
 
 
 function read_files(dirname) {
-
 
     for (let i = 0; i < 16; i++) {
         let cur_dirname = dirname + "/chan_" + String(i) + ".csv"

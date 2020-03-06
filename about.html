@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nothin But A Good Time | About</title>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="templates/static/style.css">
+    <script src="templates/static/home-banner.js"></script>
+
+    <!--<script src="templates/static/file_input_handlers.js"></script>-->
+    <!--<script src="templates/static/horizon.js"></script>-->
+    <!--<script src="templates/static/linechart.js"></script>-->
+</head>
+<body>
+<div class="row w-100 m-0 p-0" style="height: 5vh; z-index: -1">
+    <svg id="background-viz" style="height: 5vh"></svg>
+</div>
+<div class="row w-100 px-5 mx-auto my-5">
+
+    <!--motivation-->
+    <div class="row w-100 mb-4 mx-5 d-flex justify-content-right align-items-top">
+        <div class="col-3 d-flex text-right" data-aos="fade-right">
+            <h3>Motivation</h3>
+        </div>
+        <div class="col-8" data-aos="fade-left">
+            Throughout our time in college we were faced with many different types of time series data. As visual
+            analysis is a
+            very big part of the initial process of understanding the behavior of the data at hand, we always plotted
+            the data,
+            and did so using code. This was always quite a time-consuming process, especially when we wanted to view our
+            data in
+            more than one way. We were surprised at the lack of online sources that allowed users to easily explore time
+            series data, so we decided to create our own tool that does just that.
+        </div>
+    </div>
+    <!--goal-->
+    <div class="row w-100 py-4 mx-5 d-flex justify-content-right align-items-top border-top">
+        <div class="col-3 d-flex text-right" data-aos="fade-right">
+            <h3>Goal</h3>
+        </div>
+        <div class="col-8" data-aos="fade-left">
+            Our goal is to create an interactive tool that will allow users to visualize and explore different types of
+            time
+            series data regardless of its structure. <br/> The data could be uni- or multi-variate, could include tens
+            of points or
+            tens of thousands, and these points could form all types of trends, patterns, or correlation.
+        </div>
+    </div>
+    <!--implementation-->
+    <div class="row w-100 py-4 mx-5 d-flex justify-content-right align-items-top border-top">
+        <div class="col-3 d-flex text-right" data-aos="fade-right">
+            <h3>Implementation</h3>
+        </div>
+        <div class="col-8" data-aos="fade-left">
+            To make our tool as inclusive as possible, we first turned to academia to get inspiration for the types of
+            visualizations
+            we should start with. The following two papers caught our eye:<br/><br/>
+            <ul>
+                <li>
+                    <a class="link" href="https://idl.cs.washington.edu/files/2018-DenseLines-arXiv.pdf">Visualizing a Million Time
+                        Series with the Density Line Chart</a>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <a class="link" href="https://link.springer.com/article/10.1186/s12859-016-0891-2">DNAism: exploring genomic
+                        datasets on the web with Horizon Charts</a>
+                </li>
+            </ul>
+            The two main advantages of these two visualizations are:<br/><br/>
+            <ol>
+                <li> Although they are both designed for large datasets, a little bit of tweaking can make them very
+                    useful for
+                    small ones as well. A dense lines chart can easily become a normal line graph, while a horizon graph
+                    can turn
+                    into a small multiples one.<br/><br/>
+                </li>
+                <li> They guide viewers towards different behaviors of their data. Dense lines are good for
+                    understanding where
+                    data overlaps, while horizon charts make it easy understand how different time series relate to each
+                    other.
+                </li>
+            </ol>
+            The entire site has been written in Javascript with Bootstrap and D3.
+        </div>
+    </div>
+    <!--future steps-->
+    <div class="row w-100 py-4 mx-5 d-flex justify-content-right align-items-top border-top">
+        <div class="col-3 d-flex text-right" data-aos="fade-right">
+            <h3>Future Steps</h3>
+        </div>
+        <div class="col-8" data-aos="fade-left">
+            We aim to add more interactivity to the current graphs, provide information about the behavior of the
+            uploaded
+            data (mean, variance, stationarity, etc), improve the loading speed, and add more types of visualization.
+            <br/>
+            If you have any suggestions on things you would like to see in this page, we would love to hear them!
+            Just contact us on the links below.
+        </div>
+    </div>
+    <!--contact-->
+    <div class="row w-100 py-4 mx-5 d-flex justify-content-right align-items-top border-top">
+        <div class="col-3 d-flex text-right" data-aos="fade-right">
+            <h3>Contact</h3>
+        </div>
+        <div class="col-8 d-flex justify-content-left align-items-center" data-aos="fade-left">
+            <p>
+                Petra Kumi: <a href="mailto:pkumi@wpi.edu">pkumi@wpi.edu</a><br/>
+                Philippe Lessard: <a href="mailto:plessard@wpi.edu">plessard@wpi.edu</a>
+            </p>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        AOS.init()
+        load_background(3)
+    }
+</script>
+</body>
+</html>
