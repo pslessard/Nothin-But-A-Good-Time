@@ -22,7 +22,7 @@ string,float,float,(1 or 0)
 ...
 ``` 
 
-No libraries (besides d3 and Bootstrap)
+No libraries (besides d3, Bootstrap, and AOS)
 were used in creating this visualization
 tool. All of the coding was done by hand
 using some examples as reference points.
@@ -30,6 +30,7 @@ using some examples as reference points.
 We were inspired by the papers below to implement parts of our visualizations:
 [Fast Visualization for Large Time Series](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3986407/)
 [Dense Line Chart: Visualizing a Million Time Series](https://idl.cs.washington.edu/files/2018-DenseLines-arXiv.pdf)
+[Horizon Charts to Visualize Genomic Time Series](https://link.springer.com/article/10.1186/s12859-016-0891-2)
 
 
 ## Images of the site
