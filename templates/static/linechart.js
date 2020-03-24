@@ -447,7 +447,7 @@ function add_options() {
 
         let numToShow = '<div class="col-5 d-flex justify-content-center align-items-center">' +
             '<label for="tsc-range" id="tscLabel">Number of Candidates to Show</label>' +
-            '<input type="range" class="custom-range ml-2" min=1 max=21 step="1" id="tsc-range" onchange="redraw_line(this)"></div>'
+            '<input type="range" class="custom-range ml-2" min=1 max='+(final_arr.length-1)+' step="1" id="tsc-range" onchange="redraw_line(this)"></div>'
         obj.innerHTML = events_checkbox + step_range + cumulative_checkbox + numToShow
 
         sliderObj = document.getElementById("tscLabel");
@@ -456,7 +456,7 @@ function add_options() {
 
 function set_selected_or_cumulative(obj) {
     selected = obj.checked;
-    if (obj.checked) {
+    if (!obj.checked) {
         sliderObj.innerHTML = "Number of Candidates to Show";
     }
     else {
@@ -499,19 +499,13 @@ function redraw_line(obj) {
     // opacity = parseFloat(obj.value);
     // console.log('opacity is', opacity)
 
-    console.log("YEEEE", obj.value);
-    for (let el of final_arr){
-        d3.selectAll("." + el.name)
-        .attr("opacity", opacity)
-    }
-
     console.log("before", final_arr)
     let newData = final_arr.filter(d => {
         if (selected) {
             return d.vals[0].k === parseInt(obj.value) || d.vals[0].event === 1
         }
         else {
-            return d.vals[0].k < obj.value
+            return d.vals[0].k <= obj.value
         }
     });
     console.log("after", final_arr, newData)
@@ -570,7 +564,14 @@ function redraw_line(obj) {
         .attr("d", d => {
             return line(d.vals)
         })
-        .attr("opacity", opacity)
+        .attr("opacity", d => {
+            if (!("selected" in d) || !d.selected) {
+                return opacity;
+            }
+            else {
+                return 0.8;
+            }
+        })
         .attr("class", d => {
             return d.name
         });
