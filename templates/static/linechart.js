@@ -1,4 +1,4 @@
-let opacity = 0.8;
+let opacity = 0.3;
 let paths = undefined;
 let line = undefined;
 let pathGroup = undefined;
@@ -6,6 +6,17 @@ let x = undefined;
 let y = undefined;
 let xAxis = undefined;
 let yAxis = undefined;
+let highlights = undefined;
+let sliderObj = undefined;
+let selected = false;
+let queryColor = "#C62828";
+// let queryColor = "steelblue";
+// let candColor = color_schemes.purples(2);
+let candColor = "steelblue";
+let mouseover = undefined;
+let mouseleave = undefined;
+let mousemove = undefined;
+let click = undefined;
 
 let linechart = () => {
 
@@ -142,27 +153,27 @@ let linechart = () => {
     //     .attr("fill", "aquamarine")
     //     .attr("opacity", 0.5);
 
-    let newData = [];
-    data.forEach(d => {
-        let max = d3.max(d.vals, pt => pt.y);
-        let min = d3.min(d.vals, pt => pt.y);
-        // svg.append("g")
-        //     .selectAll("line")
-        //     .data([mean])
-        //     .enter()
-        //     .append("line")
-        //     .attr("y1", d => y(d))
-        //     .attr("y2", d => y(d))
-        //     .attr("x1", 0)
-        //     .attr("x2", 10000)
-        //     .attr("stroke-width", 1)
-        //     .attr("stroke", "steelblue")
-        //  console.log("mean", mean)
-        //  console.log("stddev", stddev)
-
-        let datum = d.vals.map(pt => { return (pt["y"] - min) / (max - min) });
-        newData.push(datum)
-    });
+    // let newData = [];
+    // data.forEach(d => {
+    //     let max = d3.max(d.vals, pt => pt.y);
+    //     let min = d3.min(d.vals, pt => pt.y);
+    //     // svg.append("g")
+    //     //     .selectAll("line")
+    //     //     .data([mean])
+    //     //     .enter()
+    //     //     .append("line")
+    //     //     .attr("y1", d => y(d))
+    //     //     .attr("y2", d => y(d))
+    //     //     .attr("x1", 0)
+    //     //     .attr("x2", 10000)
+    //     //     .attr("stroke-width", 1)
+    //     //     .attr("stroke", queryColor)
+    //     //  console.log("mean", mean)
+    //     //  console.log("stddev", stddev)
+    //
+    //     let datum = d.vals.map(pt => { return (pt["y"] - min) / (max - min) });
+    //     newData.push(datum)
+    // });
 
     let idleTimeout, idleDelay = 350;
 
@@ -173,7 +184,7 @@ let linechart = () => {
         .x((d) => {return x(d.x)})
         .y((d) => {return y(d.y)});
 
-    let highlights = svg.append("g").attr("pointer-events", "none").selectAll("rect")
+    highlights = svg.append("g").attr("pointer-events", "none").selectAll("rect")
         .data(intervals)
         .enter()
         .append("rect")
@@ -212,9 +223,9 @@ let linechart = () => {
             console.log("dddddd", i, d, d.name, d.name.includes("query"));
             if (d.name.includes("query")) {
                 console.log("OH NATALIE")
-                return "steelblue"
+                return queryColor
             }
-            return color_schemes.purples(2);
+            return candColor;
         })
         .attr("stroke-width", 1)
         .attr("fill", "none")
@@ -279,7 +290,7 @@ let linechart = () => {
         .attr("dy", "1.25em")
         .style("text-anchor", "middle");
 
-    let click = (d, i, nodes) => {
+    click = (d, i, nodes) => {
         let ts = d3.selectAll("." + d.name);
         if ("selected" in d) {
             ts.datum(d => {
@@ -307,13 +318,13 @@ let linechart = () => {
     };
 
 
-    let mouseover = (d, i, nodes) => {
+    mouseover = (d, i, nodes) => {
         d3.selectAll("." + d.name)
             .attr("opacity", 0.8)
             .attr("stroke-width", 1.5);
     };
 
-    let mouseleave = (d, i, nodes) => {
+    mouseleave = (d, i, nodes) => {
         // console.log(d);
         if (!("selected" in d) || !d.selected) {
             d3.selectAll("." + d.name)
@@ -327,7 +338,7 @@ let linechart = () => {
         tooltipRect.attr("opacity", 0);
     };
 
-    let mousemove = (d, i, nodes) => {
+    mousemove = (d, i, nodes) => {
         let mouse = d3.mouse(nodes[i]);
         let closePoint = getClosest(d.vals, x.invert(mouse[0]));
         console.log(x.invert(mouse[0]), y.invert(mouse[1]));
@@ -412,25 +423,48 @@ let linechart = () => {
 function add_options() {
     let obj = document.getElementById('options');
     if (obj.innerHTML === "") {
-        console.log("hereeee")
+        console.log("hereeee");
         let events_checkbox = ' <div class="col-5 d-flex justify-content-center align-items-center">' +
             // '<div class="col-1 p-0 d-flex align-items-center justify-content-right">' +
             '<div class="col-7 d-flex text-center">' +
-                        '<input type="checkbox" class="form-check-input " id="events-check" onchange="add_remove_events(this)">' +
+            '<input type="checkbox" class="form-check-input " id="events-check" onchange="add_remove_events(this)">' +
             '<label class="form-check-label" for="events-check">Show/hide event highlights</label>' +
             '</div></div>';
-        // let step_range = '<div class="col-5 d-flex justify-content-center align-items-center">' +
-        //     // '<div class="col p-0 d-flex align-items-center text-center">' +
-        //     '<label for="opacity-range">Line Opacity</label>' +
-        //     // '</div><div class="col d-flex align-items-center">' +
-        //     '<input type="range" class="custom-range ml-2" min=0.1 max=0.8 step="0.1" id="opacity-range" onchange="redraw_line(this)"></div>'
-        //     // '</div>';
+
+        let step_range = '<div class="col-5 d-flex justify-content-center align-items-center">' +
+            // '<div class="col p-0 d-flex align-items-center text-center">' +
+            '<label for="opacity-range">Line Opacity</label>' +
+            // '</div><div class="col d-flex align-items-center">' +
+            '<input type="range" class="custom-range ml-2" min=0.1 max=0.8 step="0.1" id="opacity-range" onchange="change_opacity(this)"></div>'
+            // '</div>';
+
+        let cumulative_checkbox = ' <div class="col-6 d-flex justify-content-center align-items-center">' +
+            // '<div class="col-1 p-0 d-flex align-items-center justify-content-right">' +
+            '<div class="col-8 d-flex text-center">' +
+            '<input type="checkbox" class="form-check-input " id="cumulative-check" onchange="set_selected_or_cumulative(this)">' +
+            '<label class="form-check-label" for="cumulative-check-check">Show Only Selected Candidate</label>' +
+            '</div></div>';
 
         let numToShow = '<div class="col-5 d-flex justify-content-center align-items-center">' +
-            '<label for="tsc-range">Number of TSCs to Show</label>' +
+            '<label for="tsc-range" id="tscLabel">Number of Candidates to Show</label>' +
             '<input type="range" class="custom-range ml-2" min=1 max=21 step="1" id="tsc-range" onchange="redraw_line(this)"></div>'
-        obj.innerHTML = events_checkbox + numToShow
+        obj.innerHTML = events_checkbox + step_range + cumulative_checkbox + numToShow
+
+        sliderObj = document.getElementById("tscLabel");
     }
+}
+
+function set_selected_or_cumulative(obj) {
+    selected = obj.checked;
+    if (obj.checked) {
+        sliderObj.innerHTML = "Number of Candidates to Show";
+    }
+    else {
+        sliderObj.innerHTML = "Select Candidate to Show";
+    }
+
+    let tempObj = document.getElementById("tsc-range");
+    redraw_line(tempObj);
 }
 
 function add_remove_events(obj) {
@@ -443,6 +477,20 @@ function add_remove_events(obj) {
             .transition()
             .attr("opacity", 0.3)
     }
+}
+
+function change_opacity(obj) {
+    opacity = parseFloat(obj.value);
+    console.log("meep morp", obj.value, opacity);
+
+    paths.attr("opacity", d => {
+        if (!("selected" in d) || !d.selected) {
+            return opacity;
+        }
+        else {
+            return 0.8;
+        }
+    })
 }
 
 function redraw_line(obj) {
@@ -459,7 +507,12 @@ function redraw_line(obj) {
 
     console.log("before", final_arr)
     let newData = final_arr.filter(d => {
-        return d.vals[0].k < obj.value
+        if (selected) {
+            return d.vals[0].k === parseInt(obj.value) || d.vals[0].event === 1
+        }
+        else {
+            return d.vals[0].k < obj.value
+        }
     });
     console.log("after", final_arr, newData)
 
@@ -508,9 +561,9 @@ function redraw_line(obj) {
         .attr("stroke", (d, i) => {
             console.log("dddddd", i, d, d.name, d.name.includes("query"));
             if (d.name.includes("query")) {
-                return "steelblue"
+                return queryColor
             }
-            return color_schemes.purples(2);
+            return candColor;
         })
         .attr("stroke-width", 1)
         .attr("fill", "none")
@@ -528,6 +581,12 @@ function redraw_line(obj) {
     highlights
         .attr("x", d => x(d[0]))
         .attr("width", d => (x(d[1]) - x(d[0])))
+
+    paths
+        .on("mouseover", mouseover)
+        .on("mouseleave", mouseleave)
+        .on("click", click)
+        .on("mousemove", mousemove);
 
 
 
