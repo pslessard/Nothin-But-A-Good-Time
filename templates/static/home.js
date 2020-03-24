@@ -14,6 +14,7 @@ let color_schemes= {
 
 
 function load_all_graphs() {
+
     let line_div = document.getElementById('line-div')
     let horizon_div = document.getElementById('horizon-div')
     line_div.classList.remove = 'closed';
@@ -31,7 +32,7 @@ function load_all_graphs() {
 
 
     add_options();
-    let op = document.getElementById("opacity-range").value;
+    let op = document.getElementById("tsc-range").value;
     linechart(parseInt(op));
     add_ranges();
     let o = document.getElementById("overlap-range").value;

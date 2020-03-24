@@ -22,6 +22,9 @@ async function new_upload(obj) {
         reader.onerror = error_handler;
         name_list.push(f.name.split(".")[0]);
         var extension = f.name.split('.').pop().toLowerCase();//file extension from input file
+
+        console.log("yii", f.name, extension)
+
         reader.onload = async e => {
             if (extension === 'csv') {
                 data_dict_arr = read_csv(e, f.name)
@@ -35,9 +38,7 @@ async function new_upload(obj) {
         reader.readAsText(f);
         console.log('hii', final_arr)
     }
-    setTimeout(function () {
-        load_all_graphs()
-    }, 800)
+    setTimeout(load_all_graphs, 800)
 }
 
 
@@ -57,19 +58,31 @@ function read_csv(event, filename) {
     //iterate through all lines to get the data and add to an array
     for (let el of allTextLines) {
         let split = el.split(',');
+
+        for (let i = 0; i < split.length; i++) {
+            split[i] = split[i].replace(new RegExp('^"'), "")
+            split[i] = split[i].replace(new RegExp('"$'), "")
+        }
+
         let x = parseFloat(split[1]);
         let y = parseFloat(split[2]);
-        let event = parseInt(split[3])
-        if (!isNaN(x) && !isNaN(y)) {
+        let event = parseInt(split[3]);
+        let distance = parseFloat(split[4]);
+        let k = parseInt(split[5])
+        if (!isNaN(x)) { // && !isNaN(y)
             vals.push({
                 'x': x,
                 'y': y,
-                'event': event
+                'event': event,
+                'distance': distance,
+                'k': k
             })
         }
     }
     //get id
-    let name = allTextLines[1].split(',')[0];
+    let name = "TSC" + allTextLines[1].split(',')[0]
+        .replace(new RegExp(/((^")|("$)|(\s))/g), "")
+        // .replace(new RegExp('query '), "query");
     //remove first element because it's the headers of the csv
     vals.shift()
 

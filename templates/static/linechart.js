@@ -1,4 +1,12 @@
-let opacity = 0.1;
+let opacity = 0.8;
+let paths = undefined;
+let line = undefined;
+let pathGroup = undefined;
+let x = undefined;
+let y = undefined;
+let xAxis = undefined;
+let yAxis = undefined;
+
 let linechart = () => {
 
     let margin = {top: 20, right: 40, bottom: 20, left: 50},
@@ -104,7 +112,7 @@ let linechart = () => {
         });
     });
     let x0 = [xmin, xmax];
-    var x = d3.scaleLinear()
+    x = d3.scaleLinear()
         .domain(x0)
         .range([0, width]);
 
@@ -119,7 +127,7 @@ let linechart = () => {
         });
     });
     let y0 = [min, max];
-    let y = d3.scaleLinear()
+    y = d3.scaleLinear()
         .domain(y0)
         .range([height - margin.top - margin.bottom, 0]);
 
@@ -158,8 +166,10 @@ let linechart = () => {
 
     let idleTimeout, idleDelay = 350;
 
-    let line = d3.line()
-        .defined(d => {return !isNaN(d.y)})
+    line = d3.line()
+        .defined(d => {
+            return !isNaN(d.y)
+        })
         .x((d) => {return x(d.x)})
         .y((d) => {return y(d.y)});
 
@@ -191,12 +201,21 @@ let linechart = () => {
 
 
     // console.log(svg)
-    let paths = svg.append("g").selectAll("path")
+    console.log("CHUMBAWAMBA", data)
+    pathGroup = svg.append("g")
+    paths = pathGroup.selectAll("path")
         .data(data)
         .enter()
         .append("path")
         .attr('pointer-events', 'stroke')
-        .attr("stroke", (d, i) => color_schemes.purples(2))
+        .attr("stroke", (d, i) => {
+            console.log("dddddd", i, d, d.name, d.name.includes("query"));
+            if (d.name.includes("query")) {
+                console.log("OH NATALIE")
+                return "steelblue"
+            }
+            return color_schemes.purples(2);
+        })
         .attr("stroke-width", 1)
         .attr("fill", "none")
         .attr("d", d => {
@@ -232,13 +251,13 @@ let linechart = () => {
         .attr("height", "200%")
         .attr("fill", "white");
 
-    let xAxis = svg.append("g")
+    xAxis = svg.append("g")
         .attr("id", "xAxis")
         .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
         .attr('class', 'axis')
         .call(d3.axisBottom(x));
 
-    let yAxis = svg.append("g")
+    yAxis = svg.append("g")
         .attr("id", "yAxis")
         .attr('class', 'axis')
         .call(d3.axisLeft(y));
@@ -400,13 +419,17 @@ function add_options() {
                         '<input type="checkbox" class="form-check-input " id="events-check" onchange="add_remove_events(this)">' +
             '<label class="form-check-label" for="events-check">Show/hide event highlights</label>' +
             '</div></div>';
-        let step_range = '<div class="col-5 d-flex justify-content-center align-items-center">' +
-            // '<div class="col p-0 d-flex align-items-center text-center">' +
-            '<label for="opacity-range">Line Opacity</label>' +
-            // '</div><div class="col d-flex align-items-center">' +
-            '<input type="range" class="custom-range ml-2" min=0.1 max=0.8 step="0.1" id="opacity-range" onchange="redraw_line(this)"></div>'
-            // '</div>';
-        obj.innerHTML = events_checkbox + step_range
+        // let step_range = '<div class="col-5 d-flex justify-content-center align-items-center">' +
+        //     // '<div class="col p-0 d-flex align-items-center text-center">' +
+        //     '<label for="opacity-range">Line Opacity</label>' +
+        //     // '</div><div class="col d-flex align-items-center">' +
+        //     '<input type="range" class="custom-range ml-2" min=0.1 max=0.8 step="0.1" id="opacity-range" onchange="redraw_line(this)"></div>'
+        //     // '</div>';
+
+        let numToShow = '<div class="col-5 d-flex justify-content-center align-items-center">' +
+            '<label for="tsc-range">Number of TSCs to Show</label>' +
+            '<input type="range" class="custom-range ml-2" min=1 max=21 step="1" id="tsc-range" onchange="redraw_line(this)"></div>'
+        obj.innerHTML = events_checkbox + numToShow
     }
 }
 
@@ -423,12 +446,88 @@ function add_remove_events(obj) {
 }
 
 function redraw_line(obj) {
-    opacity = parseFloat(obj.value);
-    console.log('opacity is', opacity)
+    // opacity = 0.8;
+    // console.log("meep morp", obj.value)
+    // opacity = parseFloat(obj.value);
+    // console.log('opacity is', opacity)
+
+    console.log("YEEEE", obj.value);
     for (let el of final_arr){
         d3.selectAll("." + el.name)
         .attr("opacity", opacity)
     }
+
+    console.log("before", final_arr)
+    let newData = final_arr.filter(d => {
+        return d.vals[0].k < obj.value
+    });
+    console.log("after", final_arr, newData)
+
+    let xmax = d3.max(newData, dt => {
+        return d3.max(dt.vals, datum => {
+            return datum.x;
+        });
+    });
+    let xmin = d3.min(newData, dt => {
+        return d3.min(dt.vals, datum => {
+            return datum.x;
+        });
+    });
+    x.domain([xmin, xmax]);
+
+    let max = d3.max(newData, dt => {
+        return d3.max(dt.vals, datum => {
+            return datum.y;
+        });
+    });
+    let min = d3.min(newData, dt => {
+        return d3.min(dt.vals, datum => {
+            return datum.y;
+        });
+    });
+    y.domain([min, max]);
+
+    line
+        .x((d) => {
+            return x(d["x"])
+        })
+        .y((d) => {
+            return y(d["y"])
+        });
+
+    paths
+        .data([])
+        .exit().remove();
+
+    paths = pathGroup
+        .selectAll("path")
+        .data(newData)
+        .enter()
+        .append("path")
+        // .enter()
+        .attr("stroke", (d, i) => {
+            console.log("dddddd", i, d, d.name, d.name.includes("query"));
+            if (d.name.includes("query")) {
+                return "steelblue"
+            }
+            return color_schemes.purples(2);
+        })
+        .attr("stroke-width", 1)
+        .attr("fill", "none")
+        .attr("d", d => {
+            return line(d.vals)
+        })
+        .attr("opacity", opacity)
+        .attr("class", d => {
+            return d.name
+        });
+
+    xAxis.transition().duration(500).call(d3.axisBottom(x));
+    yAxis.transition().duration(500).call(d3.axisLeft(y));
+
+    highlights
+        .attr("x", d => x(d[0]))
+        .attr("width", d => (x(d[1]) - x(d[0])))
 
 
 
