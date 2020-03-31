@@ -16,17 +16,17 @@ let color_schemes= {
 function load_all_graphs() {
 
     let line_div = document.getElementById('line-div')
-    let horizon_div = document.getElementById('horizon-div')
+    // let horizon_div = document.getElementById('horizon-div')
     line_div.classList.remove = 'closed';
     line_div.style.position = 'relative'
     line_div.style.visibility = 'visible'
-    horizon_div.classList.remove = 'closed';
-        horizon_div.style.position = 'relative'
-    horizon_div.style.visibility = 'visible'
+    // horizon_div.classList.remove = 'closed';
+    //     horizon_div.style.position = 'relative'
+    // horizon_div.style.visibility = 'visible'
             // document.getElementById('-container').classList.remove = 'closed';
     //
     document.getElementById("line-chart").innerHTML = "";
-    document.getElementById("horizon-chart").innerHTML = "";
+    // document.getElementById("horizon-chart").innerHTML = "";
     // document.getElementById("line-chart").innerHTML = "";
 
 
@@ -34,11 +34,11 @@ function load_all_graphs() {
     add_options();
     let op = document.getElementById("tsc-range").value;
     linechart(parseInt(op));
-    add_ranges();
-    let o = document.getElementById("overlap-range").value;
-    let s = document.getElementById("step-range").value;
-    console.log("o s", o, s);
-    horizon_graph(parseInt(o), parseInt(s))
+    // add_ranges();
+    // let o = document.getElementById("overlap-range").value;
+    // let s = document.getElementById("step-range").value;
+    // console.log("o s", o, s);
+    // horizon_graph(parseInt(o), parseInt(s))
 
     // ridgeline_chart()
 }

@@ -322,9 +322,21 @@ let linechart = () => {
         d3.selectAll("." + d.name)
             .attr("opacity", 0.8)
             .attr("stroke-width", 1.5);
+
+        document.getElementById('tsc-info').innerHTML =
+            "TSC ID: " +
+            d.name.split('TSC')[1] +
+            "<br/>" +
+            "k value: " +
+            d.vals[0].k +
+            "<br/>" +
+            "Distance from query: " +
+            d.vals[0].distance
     };
 
     mouseleave = (d, i, nodes) => {
+        document.getElementById('tsc-info').innerHTML = "";
+
         // console.log(d);
         if (!("selected" in d) || !d.selected) {
             d3.selectAll("." + d.name)
@@ -435,7 +447,9 @@ function add_options() {
             // '<div class="col p-0 d-flex align-items-center text-center">' +
             '<label for="opacity-range">Line Opacity</label>' +
             // '</div><div class="col d-flex align-items-center">' +
-            '<input type="range" class="custom-range ml-2" min=0.1 max=0.8 step="0.1" id="opacity-range" onchange="change_opacity(this)"></div>'
+            '<input type="range" class="custom-range ml-2" min="0.1" max="0.8" step="0.1" value="0.3" id="opacity-range" onchange="change_opacity(this)">' +
+            '<input id="opacity-range-text" class="form-control thin-form" value="0.3" onchange="change_opacity(this)">' +
+            '</div>'
             // '</div>';
 
         let cumulative_checkbox = ' <div class="col-6 d-flex justify-content-center align-items-center">' +
@@ -447,7 +461,10 @@ function add_options() {
 
         let numToShow = '<div class="col-5 d-flex justify-content-center align-items-center">' +
             '<label for="tsc-range" id="tscLabel">Number of Candidates to Show</label>' +
-            '<input type="range" class="custom-range ml-2" min=1 max='+(final_arr.length-1)+' step="1" id="tsc-range" onchange="redraw_line(this)"></div>'
+            '<input type="range" class="custom-range ml-2" min="1" max="'+(final_arr.length-1)+'" step="1" ' +
+            'value="'+(final_arr.length-1)+'" id="tsc-range" onchange="redraw_line(this)">' +
+            '<input id="tsc-range-text" class="form-control thin-form" value="'+(final_arr.length-1)+'" onchange="redraw_line(this)">' +
+            '</div>'
         obj.innerHTML = events_checkbox + step_range + cumulative_checkbox + numToShow
 
         sliderObj = document.getElementById("tscLabel");
@@ -491,6 +508,9 @@ function change_opacity(obj) {
             return 0.8;
         }
     })
+
+    document.getElementById('opacity-range-text').value = opacity
+    document.getElementById('opacity-range').value = opacity
 }
 
 function redraw_line(obj) {
@@ -498,6 +518,8 @@ function redraw_line(obj) {
     // console.log("meep morp", obj.value)
     // opacity = parseFloat(obj.value);
     // console.log('opacity is', opacity)
+    document.getElementById('tsc-range-text').value = obj.value
+    document.getElementById('tsc-range').value = obj.value
 
     console.log("before", final_arr)
     let newData = final_arr.filter(d => {

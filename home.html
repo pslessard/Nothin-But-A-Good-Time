@@ -26,6 +26,17 @@
     <script src="templates/static/linechart.js"></script>
     <script src="templates/static/home-banner.js"></script>
 
+    <style>
+        .thin-form {
+            width: 50px;
+            margin-left: 10px;
+        }
+
+        .all-height {
+            height: 100%;
+        }
+    </style>
+
     <!--<script src="templates/static/ridgeline_graph.js"></script>-->
 </head>
 <body>
@@ -33,74 +44,75 @@
 <div class="home-container w-100">
     <div id="homebanner" class="row w-100 d-flex align-items-center justify-content-center">
         <div class="row w-100 align-items-center justify-content-center" data-aos="zoom-in">
-            <h1 class="headertext"><b>Nothin But A Good Time</b></h1>
-            <div class="row w-100 align-items-center justify-content-center">
-                <h2 class="headertext">A visual exploration of time series data</h2>
-            </div>
+            <h1 class="headertext"><b>Time Series Compound Visualizer</b></h1>
+<!--            <div class="row w-100 align-items-center justify-content-center">-->
+<!--                <h2 class="headertext">A visual exploration of time series data</h2>-->
+<!--            </div>-->
         </div>
     </div>
     <!--<div class="row w-100 divider"></div>-->
-    <div class="row w-100 mt-3 d-flex align-items-center justify-content-center">
-        <div class="col-10 mt-5">
-            <p style="font-size: 1.3em; text-align: center" data-aos="fade-down">We know that visualizing time series is
-                not an easy task. That's why we did the hard work. <br/>
-                We gathered the most common visualization methods in this tool, usable regardless of how many time
-                series you want to view. <br/>
-                All you have to do is upload the data (or use one of our datasets)
-            </p>
-            <hr class="mb-5 mt-4">
-        </div>
-    </div>
+<!--    <div class="row w-100 mt-3 d-flex align-items-center justify-content-center">-->
+<!--        <div class="col-10 mt-5">-->
+<!--            <p style="font-size: 1.3em; text-align: center" data-aos="fade-down">We know that visualizing time series is-->
+<!--                not an easy task. That's why we did the hard work. <br/>-->
+<!--                We gathered the most common visualization methods in this tool, usable regardless of how many time-->
+<!--                series you want to view. <br/>-->
+<!--                All you have to do is upload the data (or use one of our datasets)-->
+<!--            </p>-->
+<!--            <hr class="mb-5 mt-4">-->
+<!--        </div>-->
+<!--    </div>-->
     <div class="input-group row w-100 d-flex align-items-center justify-content-left mt-5 p-0">
         <div class="col-3 text-center" data-aos="fade-left">
-            <h4>Step 1: <br/>Pick your dataset</h4>
+<!--            <h4>Step 1: <br/>Pick your dataset</h4>-->
         </div>
-        <div class="col-4 d-flex align-items-center justify-content-center" data-aos="fade-right">
+        <div class="col-6 d-flex align-items-center justify-content-center" data-aos="fade-right">
             <div class="custom-file">
                 <input type="file" class="custom-file-input" id="dataset-upload-input" accept=".csv, .json"
                        onchange="(async()=>{await new_upload(this)})()"
                        multiple>
-                <label class="custom-file-label" for="dataset-upload-input" onchange="new_upload_temp(this)">Upload your
-                    own data</label>
+                <label class="custom-file-label" for="dataset-upload-input" onchange="new_upload_temp(this)">
+                    Click here to upload data
+                </label>
             </div>
         </div>
-        <div class="col-4 d-flex align-items-center justify-content-center">
-            <button class="btn  dropdown-toggle btn-block" type="button" id="dropdown-btn"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Or choose from our sample datasets
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdown-btn">
-                <a class="dropdown-item" onclick="load_local(1)">1. Medium-sized set with continuous multivariate
-                    series</a>
-                <a class="dropdown-item" onclick="load_local(2)">2. Large set with discontinuous multivariate series</a>
-            </div>
-        </div>
+<!--        <div class="col-4 d-flex align-items-center justify-content-center">-->
+<!--            <button class="btn  dropdown-toggle btn-block" type="button" id="dropdown-btn"-->
+<!--                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                Or choose from our sample datasets-->
+<!--            </button>-->
+<!--            <div class="dropdown-menu" aria-labelledby="dropdown-btn">-->
+<!--                <a class="dropdown-item" onclick="load_local(1)">1. Medium-sized set with continuous multivariate-->
+<!--                    series</a>-->
+<!--                <a class="dropdown-item" onclick="load_local(2)">2. Large set with discontinuous multivariate series</a>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
-    <div class="input-group row w-100 d-flex align-items-center justify-content-left p-0 mt-4 ">
-        <div class="col-3 text-center">
-            <h4>Step 2: <br/> Pick a visualization</h4>
-        </div>
-        <!--<div class="col text-left p-0" data-aos="fade-right">-->
-        <!--<div class="row w-100 d-flex align-items-center justify-content-left" data-aos="fade-right">-->
-        <div class="col-4 d-flex align-items-center justify-content-center" data-aos="fade-right">
-            <a href="#line-div"><img src="resources/site-imgs/line-thumb.png"
-                                     class="thumbnails rounded"
-                                     alt="..."></a>
-        </div>
-        <div class="col-4 d-flex align-items-center justify-content-center" data-aos="fade-right">
-            <a href="#horizon-div"><img src="resources/site-imgs/horizon-thumb.png"
-                                        class="thumbnails rounded"
-                                        alt="..."></a></div>
-        <!--<div class="col-4 m-0 p-0">-->
-        <!--<a href="#matrix-div"><img src="resources/site-imgs/horizon-thumb.png"-->
-        <!--class="thumbnails rounded "-->
-        <!--alt="..."></a></div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <div class="row w-100">
-            <hr class="my-4">
-        </div>
-    </div>
+<!--    <div class="input-group row w-100 d-flex align-items-center justify-content-left p-0 mt-4 ">-->
+<!--        <div class="col-3 text-center">-->
+<!--            <h4>Step 2: <br/> Pick a visualization</h4>-->
+<!--        </div>-->
+<!--        &lt;!&ndash;<div class="col text-left p-0" data-aos="fade-right">&ndash;&gt;-->
+<!--        &lt;!&ndash;<div class="row w-100 d-flex align-items-center justify-content-left" data-aos="fade-right">&ndash;&gt;-->
+<!--        <div class="col-4 d-flex align-items-center justify-content-center" data-aos="fade-right">-->
+<!--            <a href="#line-div"><img src="resources/site-imgs/line-thumb.png"-->
+<!--                                     class="thumbnails rounded"-->
+<!--                                     alt="..."></a>-->
+<!--        </div>-->
+<!--        <div class="col-4 d-flex align-items-center justify-content-center" data-aos="fade-right">-->
+<!--            <a href="#horizon-div"><img src="resources/site-imgs/horizon-thumb.png"-->
+<!--                                        class="thumbnails rounded"-->
+<!--                                        alt="..."></a></div>-->
+<!--        &lt;!&ndash;<div class="col-4 m-0 p-0">&ndash;&gt;-->
+<!--        &lt;!&ndash;<a href="#matrix-div"><img src="resources/site-imgs/horizon-thumb.png"&ndash;&gt;-->
+<!--        &lt;!&ndash;class="thumbnails rounded "&ndash;&gt;-->
+<!--        &lt;!&ndash;alt="..."></a></div>&ndash;&gt;-->
+<!--        &lt;!&ndash;</div>&ndash;&gt;-->
+<!--        &lt;!&ndash;</div>&ndash;&gt;-->
+<!--        <div class="row w-100">-->
+<!--            <hr class="my-4">-->
+<!--        </div>-->
+<!--    </div>-->
     <div id="line-div" class="row w-100 d-flex align-items-center justify-content-center text-center my-5 closed"
          data-aos="fade-down">
         <!--<hr class="my-5">-->
@@ -109,39 +121,52 @@
         <div class="row w-100 d-flex align-items-center justify-content-center" style="min-height: 50px" id="options"
              data-aos="fade-down"></div>
         <div class="row d-flex align-items-center justify-content-center mb-5">
-            <div class="col-11 d-flex justify-content-left p-0 my-3">
+            <div class="col-9 d-flex justify-content-left p-0 my-3">
                 <svg id="line-chart" class="chart" style="width: 100vw;"></svg>
             </div>
-        </div>
-
-    </div>
-    <div id="horizon-div" class="row w-100 d-flex align-items-center text-center my-5 closed">
-        <div class="row w-100 d-flex justify-content-center text-center my-5" data-aos="zoom-out-up">
-            <h4 class="text-center">Horizon Chart and Small Multiples</h4>
-        </div>
-        <div class="row w-100 d-flex align-items-center justify-content-left mb-5" data-aos="fade-down">
-            <div class="row w-100 d-flex align-items-center justify-content-center my-3"
-                 style="min-height: 50px"
-                 id="ranges"></div>
-            <div class="row w-100">
-                <svg id="horizon-chart" style="width: 100vw; margin-left: 100px"
-                     data-aos="fade-right"></svg>
+            <div class="col-2 d-flex align-items-left justify-content-left p-0 my-3 ">
+                <div>
+                    Hover over a time series compound for more information:
+                    <p id="tsc-info"></p>
+                </div>
             </div>
         </div>
-        <!--padding-->
-        <div class="row w-100" style="height: 10vh"></div>
-        <!--padding-->
+        <div class="row w-100 d-flex align-items-center justify-content-center text-center my-5" data-aos="zoom-out-up">
+            <h4 class="text-center">Line Chart and Density Plot</h4>
+        </div>
+
     </div>
-    <div id="matrix-div" class="row w-100 d-flex align-items-center justify-content-center text-center closed"
-         data-aos="fade-down">
-        <div class="row w-100 d-flex align-items-center justify-content-center text-center">
-            <h4 class="text-center">Density Matrix</h4></div>
-        <svg id="matrix-chart" class="chart" data-aos="fade-right"></svg>
-    </div>
+<!--    <div id="horizon-div" class="row w-100 d-flex align-items-center text-center my-5 closed">-->
+<!--        <div class="row w-100 d-flex justify-content-center text-center my-5" data-aos="zoom-out-up">-->
+<!--            <h4 class="text-center">Horizon Chart and Small Multiples</h4>-->
+<!--        </div>-->
+<!--        <div class="row w-100 d-flex align-items-center justify-content-left mb-5" data-aos="fade-down">-->
+<!--            <div class="row w-100 d-flex align-items-center justify-content-center my-3"-->
+<!--                 style="min-height: 50px"-->
+<!--                 id="ranges"></div>-->
+<!--            <div class="row w-100">-->
+<!--                <svg id="horizon-chart" style="width: 100vw; margin-left: 100px"-->
+<!--                     data-aos="fade-right"></svg>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash;padding&ndash;&gt;-->
+<!--        <div class="row w-100" style="height: 10vh"></div>-->
+<!--        &lt;!&ndash;padding&ndash;&gt;-->
+<!--    </div>-->
+<!--    <div id="matrix-div" class="row w-100 d-flex align-items-center justify-content-center text-center closed"-->
+<!--         data-aos="fade-down">-->
+<!--        <div class="row w-100 d-flex align-items-center justify-content-center text-center">-->
+<!--            <h4 class="text-center">Density Matrix</h4></div>-->
+<!--        <svg id="matrix-chart" class="chart" data-aos="fade-right"></svg>-->
+<!--    </div>-->
 
     <div class="row w-100 d-flex align-items-center justify-content-center fixed-bottom bg-white">
-        <p class="my-2"style="color: #4b4b4b;">Website by <a href="#" class="link">Petra Kumi</a> and <a href="#" class="link">Philippe
-            Lessard</a> | <a href="about.html" class="link">Lean more about this project</a></p>
+        <p class="my-2"style="color: #4b4b4b;">
+            TSC Visualizer by <a href="#" class="link">Philippe Lessard</a> |
+            Based on
+            <a href="https://pslessard.github.io/Nothin-But-A-Good-Time/home.html" class="link">Nothin' But A Good Time</a>
+            by <a href="#" class="link">Petra Kumi</a> and
+            <a href="#" class="link">Philippe Lessard</a></p>
     </div>
 </div>
 
