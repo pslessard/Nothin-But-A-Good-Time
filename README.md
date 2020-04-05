@@ -1,27 +1,51 @@
-# TSC Visualizer
+# Nothin-But-A-Good-Time
 
 A tool for
-visualizing and exploring time series compound datasets.
+visualizing and exploring arbitrary time 
+series datasets without having to design
+and code a custom visualization. It can also
+be used as a preliminary tool to determine
+what design choices would be good for a
+data-specific time series visualization.
 
-The tool can be accessed 
-[here](https://plessard20.github.io/TSCVisualizer/home.html), or by running the home.html file.
+The final tool can be found 
+[here.](https://pslessard.github.io/final/home.html)
+A demo video can be located [here.](https://drive.google.com/open?id=1CSdnNPC39k38fWJCafp9Tp49e72xnU7Os)
 
 The interface should all be self-explanatory
 with the exception of the feature for 
 uploading your own data. The data must be
  csv file with the following format:
 ```
-id,time,value,event,distance,k
-string,int,float,(1 or 0),float,int
+id,time,value,event
+string,float,float,(1 or 0)
 ...
 ``` 
-Each TSC should be stored in a separate csv file, and there should be a row
-for each time index between the first and last data points in the TSC. For
-times that don't have data (ie. gaps), the "value" field should be "NaN."
 
 No libraries (besides d3, Bootstrap, and AOS)
 were used in creating this visualization
 tool. All of the coding was done by hand
 using some examples as reference points.
 
-This tool is a modification of the [Nothin' But A Good Time](https://github.com/pslessard/Nothin-But-A-Good-Time) project by Philippe Lessard and Petra Kumi.
+We were inspired by the papers below to implement parts of our visualizations:
+[Fast Visualization for Large Time Series](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3986407/)
+[Dense Line Chart: Visualizing a Million Time Series](https://idl.cs.washington.edu/files/2018-DenseLines-arXiv.pdf)
+[Horizon Charts to Visualize Genomic Time Series](https://link.springer.com/article/10.1186/s12859-016-0891-2)
+
+
+## Images of the site
+
+### Front Page
+![Image](resources/site-imgs/front-page.png)
+
+### Dense Lines Chart
+![Image](resources/site-imgs/line-chart-demo.png)
+
+### Zoomed Dense Lines Chart with Events
+![Image](resources/site-imgs/line-chart-demo-zoomed.png)
+
+### Horizon Graph
+![Image](resources/site-imgs/horizon-chart-demo.png)
+
+### Small Multiples Chart (Horizon with no overlap)
+![Image](resources/site-imgs/horizon-chart-demo-no-overlap.png)
