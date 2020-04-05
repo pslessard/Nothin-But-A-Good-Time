@@ -438,34 +438,41 @@ function add_options() {
         console.log("hereeee");
         let events_checkbox = ' <div class="col-5 d-flex justify-content-center align-items-center">' +
             // '<div class="col-1 p-0 d-flex align-items-center justify-content-right">' +
-            '<div class="col-7 d-flex text-center">' +
+            '<div class="col-12 d-flex text-center">' +
             '<input type="checkbox" class="form-check-input " id="events-check" onchange="add_remove_events(this)">' +
             '<label class="form-check-label" for="events-check">Show/hide event highlights</label>' +
             '</div></div>';
 
-        let step_range = '<div class="col-5 d-flex justify-content-center align-items-center">' +
+        let step_range = '<div class="col-7 d-flex justify-content-center align-items-center">' +
             // '<div class="col p-0 d-flex align-items-center text-center">' +
+            '<div class="col-5" style="padding: 0px;">' +
             '<label for="opacity-range">Line Opacity</label>' +
+            '</div><div class="col-5" style="padding: 0px;">' +
             // '</div><div class="col d-flex align-items-center">' +
             '<input type="range" class="custom-range ml-2" min="0.1" max="0.8" step="0.1" value="0.3" id="opacity-range" onchange="change_opacity(this)">' +
+            '</div><div class="col-2" style="padding: 0px;">' +
             '<input id="opacity-range-text" class="form-control thin-form" value="0.3" onchange="change_opacity(this)">' +
-            '</div>'
+            '</div></div>'
             // '</div>';
 
-        let cumulative_checkbox = ' <div class="col-6 d-flex justify-content-center align-items-center">' +
+        let cumulative_checkbox = ' <div class="col-5 d-flex justify-content-center align-items-center">' +
             // '<div class="col-1 p-0 d-flex align-items-center justify-content-right">' +
-            '<div class="col-8 d-flex text-center">' +
+            '<div class="col-12 d-flex text-center">' +
             '<input type="checkbox" class="form-check-input " id="cumulative-check" onchange="set_selected_or_cumulative(this)">' +
             '<label class="form-check-label" for="cumulative-check-check">Show Only Selected Candidate</label>' +
             '</div></div>';
 
-        let numToShow = '<div class="col-5 d-flex justify-content-center align-items-center">' +
+        let numToShow = '<div class="col-7 d-flex justify-content-center align-items-center">' +
+            '<div class="col-5" style="padding: 0px;">' +
             '<label for="tsc-range" id="tscLabel">Number of Candidates to Show</label>' +
+            '</div><div class="col-5" style="padding: 0px;">' +
             '<input type="range" class="custom-range ml-2" min="1" max="'+(final_arr.length-1)+'" step="1" ' +
             'value="'+(final_arr.length-1)+'" id="tsc-range" onchange="redraw_line(this)">' +
+            '</div><div class="col-2" style="padding: 0px;">' +
             '<input id="tsc-range-text" class="form-control thin-form" value="'+(final_arr.length-1)+'" onchange="redraw_line(this)">' +
-            '</div>'
-        obj.innerHTML = events_checkbox + step_range + cumulative_checkbox + numToShow
+            '</div></div>'
+        obj.innerHTML = '<div class="row w-100 d-flex align-items-center justify-content-center">' + events_checkbox + step_range + '</div>' +
+            '<div class="row w-100 d-flex align-items-center justify-content-center">' + cumulative_checkbox + numToShow + '</div>'
 
         sliderObj = document.getElementById("tscLabel");
     }
